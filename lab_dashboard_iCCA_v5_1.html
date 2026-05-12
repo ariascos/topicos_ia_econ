@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Laboratorio | iCCA Stage IV</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2234;
+      --border: #2d3a52;
+      --text-primary: #f0f4f8;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --hepatic: #f59e0b;
+      --hepatic-light: rgba(245, 158, 11, 0.15);
+      --renal: #ec4899;
+      --renal-light: rgba(236, 72, 153, 0.15);
+      --hematologic: #3b82f6;
+      --hematologic-light: rgba(59, 130, 246, 0.15);
+      
+      --normal: #10b981;
+      --normal-bg: rgba(16, 185, 129, 0.12);
+      --elevated: #f97316;
+      --critical: #ef4444;
+      --low: #fbbf24;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container { max-width: 1600px; margin: 0 auto; padding: 24px; }
+    
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      margin-bottom: 24px;
+    }
+    
+    .header-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .header-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    
+    .header-title .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .header-meta {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .meta-item { text-align: right; }
+    
+    .meta-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .meta-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--accent-cyan);
+    }
+    
+    .badge-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--normal);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .badge-new::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--normal);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    .section { margin-bottom: 40px; }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+    
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    
+    .section-hepatic .section-icon { background: var(--hepatic-light); }
+    .section-renal .section-icon { background: var(--renal-light); }
+    .section-hematologic .section-icon { background: var(--hematologic-light); }
+    
+    .section-title { font-size: 1.25rem; font-weight: 700; }
+    
+    .section-hepatic .section-title { color: var(--hepatic); }
+    .section-renal .section-title { color: var(--renal); }
+    .section-hematologic .section-title { color: var(--hematologic); }
+    
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+    
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      border-top: 3px solid var(--border);
+    }
+    
+    .summary-card.normal { border-top-color: var(--normal); }
+    .summary-card.elevated { border-top-color: var(--elevated); }
+    .summary-card.critical { border-top-color: var(--critical); }
+    .summary-card.low { border-top-color: var(--low); }
+    
+    .summary-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+    
+    .summary-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    
+    .summary-card.normal .summary-value { color: var(--normal); }
+    .summary-card.elevated .summary-value { color: var(--elevated); }
+    .summary-card.critical .summary-value { color: var(--critical); }
+    .summary-card.low .summary-value { color: var(--low); }
+    
+    .summary-unit { font-size: 0.75rem; font-weight: 400; opacity: 0.7; }
+    .summary-ref { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+    
+    .summary-trend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      margin-top: 6px;
+    }
+    
+    .trend-up { color: var(--critical); }
+    .trend-down { color: var(--normal); }
+    .trend-stable { color: var(--text-muted); }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .charts-grid .chart-card.full { grid-column: 1 / -1; }
+    }
+    
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .chart-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+    .chart-subtitle { font-size: 0.7rem; color: var(--text-muted); }
+    
+    .chart-legend { display: flex; gap: 12px; flex-wrap: wrap; }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+    
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .legend-box { width: 14px; height: 10px; border-radius: 2px; }
+    
+    .chart-container { position: relative; height: 280px; }
+    .chart-container.tall { height: 340px; }
+    
+    .annotation-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    
+    .annotation-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+    
+    .annotation-text {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    .table-section { margin-top: 40px; }
+    .table-title { font-size: 1.125rem; font-weight: 600; margin-bottom: 16px; }
+    
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+    
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    
+    .data-table th {
+      background: var(--bg-secondary);
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+    }
+    
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover { background: rgba(59, 130, 246, 0.05); }
+    
+    .date-col { color: var(--text-secondary); font-weight: 500; }
+    .cell-normal { color: var(--normal); }
+    .cell-elevated { color: var(--elevated); }
+    .cell-critical { color: var(--critical); }
+    .cell-low { color: var(--low); }
+    .cell-na { color: var(--text-muted); }
+    
+    .highlight-row { background: rgba(16, 185, 129, 0.08) !important; }
+    .highlight-row td:first-child::before { content: '● '; color: var(--normal); }
+    
+    .th-hepatic { background: var(--hepatic-light) !important; color: var(--hepatic) !important; }
+    .th-renal { background: var(--renal-light) !important; color: var(--renal) !important; }
+    .th-hematologic { background: var(--hematologic-light) !important; color: var(--hematologic) !important; }
+    
+    footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .footer-text { font-size: 0.7rem; color: var(--text-muted); }
+    
+    @media (max-width: 768px) {
+      .header-content { flex-direction: column; align-items: flex-start; }
+      .header-meta { width: 100%; justify-content: flex-start; }
+      .summary-row { grid-template-columns: repeat(2, 1fr); }
+      .chart-container { height: 240px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Dashboard de Laboratorio</h1>
+        <span class="subtitle">Colangiocarcinoma Intrahepático Stage IV — Régimen TOPAZ-1</span>
+      </div>
+      <div class="header-meta">
+        <span class="badge-new">Actualizado 12 May 2026</span>
+        <div class="meta-item">
+          <span class="meta-label">Última muestra</span>
+          <span class="meta-value">12/May/2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Total muestras</span>
+          <span class="meta-value">17</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN 1: PERFIL HEPÁTICO -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section section-hepatic">
+      <div class="section-header">
+        <div class="section-icon">🫀</div>
+        <h2 class="section-title">Perfil Hepático</h2>
+        <span class="section-subtitle">Enzimas hepáticas, colestasis y función sintética</span>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-card critical">
+          <div class="summary-label">ALP (Fosfatasa Alcalina)</div>
+          <div class="summary-value">686.0 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 35–104 · 6.6× ULN</div>
+          <div class="summary-trend trend-down">↓ desde 750.9</div>
+        </div>
+        <div class="summary-card critical">
+          <div class="summary-label">GGT</div>
+          <div class="summary-value">2442 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 6–42 · 58× ULN ⚠ pico histórico</div>
+          <div class="summary-trend trend-up">↑ nuevo máximo</div>
+        </div>
+        <div class="summary-card elevated">
+          <div class="summary-label">AST (TGO)</div>
+          <div class="summary-value">46.9 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 0–32 · 1.5× ULN</div>
+          <div class="summary-trend trend-up">↑ desde 37.5</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">ALT (TGP)</div>
+          <div class="summary-value">22.0 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 0–33</div>
+          <div class="summary-trend trend-up">↑ desde 15.6</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Bilirrubina Total</div>
+          <div class="summary-value">0.46 <span class="summary-unit">mg/dL</span></div>
+          <div class="summary-ref">Ref: 0.14–0.9</div>
+          <div class="summary-trend trend-stable">= persistentemente normal</div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card full">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Marcadores de Colestasis (ALP + GGT)</div>
+              <div class="chart-subtitle">Patrón de colestasis disociada — elevación enzimática con bilirrubina normal</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>ALP (U/L)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>GGT (U/L)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Bilirrubina ×100</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Rango normal</div>
+            </div>
+          </div>
+          <div class="chart-container tall">
+            <canvas id="cholestasisChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Interpretación</div>
+            <div class="annotation-text">
+              <strong>Colestasis disociada:</strong> ALP y GGT marcadamente elevados con bilirrubina persistentemente normal (0.30–0.46 mg/dL). 
+              Este patrón confirma obstrucción intrahepática por infiltración tumoral, no metástasis óseas. 
+              GGT: 2346 U/L (21-Abr) → <strong>2442 U/L (12-May, pico histórico — 58× ULN)</strong>. ALP en tendencia descendente sostenida desde el pico de enero (957.7 → 686 U/L). 
+              LDH 12-May: 504 U/L (2.4× ULN), refleja carga tumoral intrahepática activa. 
+              Dímero D 12-May: 4.412 µg/mL (ref. ≤0.5) — hipercoagulabilidad paraneoplásica significativa.
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Transaminasas (AST / ALT)</div>
+              <div class="chart-subtitle">Marcadores de daño hepatocelular</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span>AST</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#06b6d4"></span>ALT</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="transaminasesChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Bilirrubinas</div>
+              <div class="chart-subtitle">Total y directa</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span>Total</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Directa</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="bilirubinChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN 2: FUNCIÓN RENAL -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section section-renal">
+      <div class="section-header">
+        <div class="section-icon">🫘</div>
+        <h2 class="section-title">Función Renal</h2>
+        <span class="section-subtitle">Monitoreo de nefrotoxicidad por cisplatino</span>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-card normal">
+          <div class="summary-label">Creatinina</div>
+          <div class="summary-value">0.85 <span class="summary-unit">mg/dL</span></div>
+          <div class="summary-ref">Ref: 0.51–0.95</div>
+          <div class="summary-trend trend-stable">= estable</div>
+        </div>
+        <div class="summary-card elevated">
+          <div class="summary-label">BUN</div>
+          <div class="summary-value">22.1 <span class="summary-unit">mg/dL</span></div>
+          <div class="summary-ref">Ref: 6–20 (30-Mar)</div>
+          <div class="summary-trend trend-stable">= leve elevación</div>
+        </div>
+        <div class="summary-card elevated">
+          <div class="summary-label">LDH</div>
+          <div class="summary-value">504 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 135–214 · 2.4× ULN</div>
+          <div class="summary-trend trend-stable">⚠ nuevo dato 12-May</div>
+        </div>
+        <div class="summary-card critical">
+          <div class="summary-label">Dímero D</div>
+          <div class="summary-value">4.412 <span class="summary-unit">µg/mL</span></div>
+          <div class="summary-ref">Ref: ≤0.5 · 8.8× límite</div>
+          <div class="summary-trend trend-up">⚠ hipercoagulabilidad</div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Creatinina Sérica</div>
+              <div class="chart-subtitle">Función glomerular — vigilancia por cisplatino</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#ec4899"></span>Creatinina</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (0.51–0.95)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="creatinineChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Nota</div>
+            <div class="annotation-text">
+              Función renal preservada durante todo el tratamiento. Creatinina 0.85 mg/dL (12-May), estable en rango normal. 
+              Sin evidencia de nefrotoxicidad acumulativa por cisplatino (mantenimiento con durvalumab, sin exposición adicional a platino).
+              <br><br>
+              <strong>⚠ Dímero D 12-May: 4.412 µg/mL</strong> (ref. ≤0.5) — elevación marcada, consistente con estado de hipercoagulabilidad paraneoplásica. 
+              Requiere evaluación clínica por el equipo tratante (descartar TVP/TEP activo).<br>
+              <strong>LDH 12-May: 504 U/L</strong> (ref. 135–214, 2.4× ULN) — marcador de carga tumoral intrahepática activa.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN 3: PANEL HEMATOLÓGICO -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section section-hematologic">
+      <div class="section-header">
+        <div class="section-icon">🩸</div>
+        <h2 class="section-title">Panel Hematológico</h2>
+        <span class="section-subtitle">Hemograma, series celulares y marcadores pronósticos</span>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-card normal">
+          <div class="summary-label">NLR (Neutrófilo/Linfocito)</div>
+          <div class="summary-value">1.11</div>
+          <div class="summary-ref">Favorable: &lt;3</div>
+          <div class="summary-trend trend-down">↓ desde 2.35 · mínimo histórico</div>
+        </div>
+        <div class="summary-card low">
+          <div class="summary-label">Hemoglobina</div>
+          <div class="summary-value">11.20 <span class="summary-unit">g/dL</span></div>
+          <div class="summary-ref">Ref: 11.2–15.7 · en límite inferior</div>
+          <div class="summary-trend trend-down">↓ desde 12.9</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Leucocitos (WBC)</div>
+          <div class="summary-value">6.23 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 3.98–10.04</div>
+          <div class="summary-trend trend-down">↓ desde 8.52 · normal</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Neutrófilos</div>
+          <div class="summary-value">2.75 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 1.56–6.13</div>
+          <div class="summary-trend trend-down">↓ desde 5.09 · normal</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Linfocitos</div>
+          <div class="summary-value">2.47 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 1.18–3.74</div>
+          <div class="summary-trend trend-up">↑ desde 2.17 · normal</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Plaquetas</div>
+          <div class="summary-value">250 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 182–369</div>
+          <div class="summary-trend trend-up">↑ desde 245 · normal</div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Índice Neutrófilos/Linfocitos (NLR)</div>
+              <div class="chart-subtitle">Marcador pronóstico — favorable si &lt;3</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>NLR</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Favorable (&lt;3)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="nlrChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Interpretación NLR</div>
+            <div class="annotation-text">
+              NLR mantenido &lt;3 (favorable para eLTS) excepto el 7-Ene (7.91, post-procedimiento) y 4-Mar (2.44). 
+              El valor de 0.43 del 30-Mar fue artefactual por neutropenia. El actual 1.11 del 12-May es el más bajo registrado en seguimiento, 
+              reflejando excelente perfil inmune-inflamatorio y linfocitos funcionalmente activos (2.47 ×10³/µL).
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Hemoglobina</div>
+              <div class="chart-subtitle">Serie roja — tolerancia a quimioterapia</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Hemoglobina</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (11.2–15.7)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="hemoglobinChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Leucocitos Totales (WBC)</div>
+              <div class="chart-subtitle">Serie blanca — recuperación medular</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>WBC</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (3.98–10.04)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="wbcChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Diferencial: Neutrófilos y Linfocitos</div>
+              <div class="chart-subtitle">Poblaciones celulares absolutas</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Neutrófilos</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Linfocitos</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(249,115,22,0.1);border:1px dashed #f97316"></span>Neut (1.56–6.13)</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(59,130,246,0.1);border:1px dashed #3b82f6"></span>Linf (1.18–3.74)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="diffChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TABLA DE DATOS COMPLETA -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="table-section">
+      <h2 class="table-title">Tabla de Datos Completa</h2>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th class="th-hematologic">NLR</th>
+              <th class="th-hematologic">Hgb</th>
+              <th class="th-hematologic">WBC</th>
+              <th class="th-hematologic">Plt</th>
+              <th class="th-hepatic">AST</th>
+              <th class="th-hepatic">ALT</th>
+              <th class="th-hepatic">ALP</th>
+              <th class="th-hepatic">GGT</th>
+              <th class="th-hepatic">Bili T</th>
+              <th class="th-renal">Creat</th>
+              <th class="th-hepatic">LDH</th>
+              <th class="th-renal">Dímero D</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <footer>
+      <p class="footer-text">
+        Dashboard generado para el equipo médico tratante · Datos de Fundación Valle del Lili · 
+        Última actualización: 12 de mayo de 2026
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // DATA
+    // ═══════════════════════════════════════════════════════════════
+    const labData = [
+      { date: '06-Ene', nlr: 1.92, hgb: 13.20, wbc: 6.78, neut: 4.01, lymph: 2.09, plt: null, ast: null, alt: null, alp: null, ggt: null, biliT: null, biliD: null, creat: null },
+      { date: '07-Ene', nlr: 7.91, hgb: 9.80, wbc: 6.82, neut: 5.85, lymph: 0.74, plt: null, ast: 34.7, alt: 21.5, alp: 360.7, ggt: 527, biliT: 0.44, biliD: 0.25, creat: null },
+      { date: '19-Ene', nlr: 2.48, hgb: 8.40, wbc: 7.38, neut: 4.47, lymph: 1.80, plt: null, ast: 68.4, alt: 46.6, alp: 883.0, ggt: 1893, biliT: 0.38, biliD: 0.23, creat: null },
+      { date: '28-Ene', nlr: 1.27, hgb: 9.70, wbc: 6.92, neut: 3.21, lymph: 2.52, plt: null, ast: 64.8, alt: 39.2, alp: 957.7, ggt: 1996, biliT: 0.30, biliD: 0.20, creat: null },
+      { date: '09-Feb', nlr: 1.22, hgb: 11.50, wbc: 6.72, neut: 3.01, lymph: 2.46, plt: null, ast: null, alt: null, alp: null, ggt: null, biliT: null, biliD: null, creat: null },
+      { date: '24-Feb', nlr: 1.42, hgb: 11.20, wbc: 5.46, neut: 2.69, lymph: 1.89, plt: null, ast: 54.7, alt: null, alp: 914.0, ggt: 2137, biliT: 0.34, biliD: 0.20, creat: null },
+      { date: '02-Mar', nlr: null, hgb: null, wbc: null, neut: null, lymph: null, plt: null, ast: 33.7, alt: 14.7, alp: 794.8, ggt: 1557, biliT: 0.39, biliD: 0.24, creat: 0.91 },
+      { date: '04-Mar', nlr: 2.44, hgb: 11.30, wbc: 7.04, neut: 4.70, lymph: 1.93, plt: null, ast: 96.7, alt: 35.4, alp: 683.0, ggt: 1585, biliT: 0.45, biliD: 0.24, creat: 0.88 },
+      { date: '24-Mar', nlr: 1.22, hgb: 13.00, wbc: 5.42, neut: 2.43, lymph: 2.00, plt: null, ast: null, alt: null, alp: null, ggt: null, biliT: null, biliD: null, creat: null },
+      { date: '30-Mar', nlr: 0.43, hgb: 12.90, wbc: 3.12, neut: 0.82, lymph: 1.91, plt: 245, ast: 46.8, alt: 28.0, alp: 803.9, ggt: 2226, biliT: 0.45, biliD: 0.26, creat: 0.92 },
+      { date: '14-Abr', nlr: 2.35, hgb: 12.90, wbc: 8.52, neut: 5.09, lymph: 2.17, plt: null, ast: 37.5, alt: 15.6, alp: 750.9, ggt: null, biliT: 0.44, biliD: 0.27, creat: 0.85 },
+      { date: '21-Abr', nlr: 1.55, hgb: 12.50, wbc: 7.26, neut: 3.67, lymph: 2.37, plt: 267, ast: 51.9, alt: 29.9, alp: 756.0, ggt: 2346, biliT: 0.30, biliD: 0.19, creat: 0.83 },
+      { date: '12-May', nlr: 1.11, hgb: 11.20, wbc: 6.23, neut: 2.75, lymph: 2.47, plt: 250, ast: 46.9, alt: 22.0, alp: 686.0, ggt: 2442, biliT: 0.46, biliD: 0.29, creat: 0.85, ldh: 504, dimerD: 4.412, isNew: true }
+    ];
+
+    // Reference ranges
+    const REFS = {
+      nlr: { min: 0, max: 3, label: 'Favorable' },
+      hgb: { min: 11.2, max: 15.7, label: 'Normal' },
+      wbc: { min: 3.98, max: 10.04, label: 'Normal' },
+      neut: { min: 1.56, max: 6.13, label: 'Normal' },
+      lymph: { min: 1.18, max: 3.74, label: 'Normal' },
+      plt: { min: 182, max: 369, label: 'Normal' },
+      ast: { min: 0, max: 32, label: 'Normal' },
+      alt: { min: 0, max: 33, label: 'Normal' },
+      alp: { min: 35, max: 104, label: 'Normal' },
+      ggt: { min: 6, max: 42, label: 'Normal' },
+      biliT: { min: 0.14, max: 0.9, label: 'Normal' },
+      biliD: { min: 0.09, max: 0.3, label: 'Normal' },
+      creat: { min: 0.51, max: 0.95, label: 'Normal' },
+      ldh: { min: 135, max: 214, label: 'Normal' },
+      dimerD: { min: 0, max: 0.5, label: 'Normal' }
+    };
+
+    // Helpers
+    const withValue = (arr, key) => arr.filter(d => d[key] !== null);
+    const withAny = (arr, keys) => arr.filter(d => keys.some(k => d[k] !== null));
+
+    // Chart defaults
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d3a52';
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    
+    const gridColor = 'rgba(110, 130, 170, 0.1)';
+    const normalBg = 'rgba(16, 185, 129, 0.12)';
+    const normalBorder = 'rgba(16, 185, 129, 0.4)';
+
+    // Normal range annotation helper
+    function normalRangeBox(ref, label = true) {
+      return {
+        type: 'box',
+        yMin: ref.min,
+        yMax: ref.max,
+        backgroundColor: normalBg,
+        borderColor: normalBorder,
+        borderWidth: 1,
+        borderDash: [4, 4],
+        label: label ? {
+          display: true,
+          content: `${ref.label} (${ref.min}–${ref.max})`,
+          position: { x: 'end', y: 'start' },
+          font: { size: 9, weight: 500 },
+          color: '#10b981',
+          backgroundColor: 'transparent',
+          padding: 2
+        } : undefined
+      };
+    }
+
+    // Upper limit line annotation
+    function upperLimitLine(value, color = '#ef4444', label = 'ULN') {
+      return {
+        type: 'line',
+        yMin: value,
+        yMax: value,
+        borderColor: color,
+        borderWidth: 1,
+        borderDash: [5, 5],
+        label: {
+          display: true,
+          content: `${label} = ${value}`,
+          position: 'start',
+          font: { size: 9 },
+          backgroundColor: color,
+          color: '#fff',
+          padding: { x: 4, y: 2 }
+        }
+      };
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEPATIC CHARTS
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Cholestasis Chart
+    const cholestasisData = withAny(labData, ['alp', 'ggt', 'biliT']);
+    new Chart(document.getElementById('cholestasisChart'), {
+      type: 'line',
+      data: {
+        labels: cholestasisData.map(d => d.date),
+        datasets: [
+          {
+            label: 'ALP',
+            data: cholestasisData.map(d => d.alp),
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: cholestasisData.map(d => d.isNew ? '#10b981' : '#f59e0b'),
+            pointBorderWidth: cholestasisData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          },
+          {
+            label: 'GGT',
+            data: cholestasisData.map(d => d.ggt),
+            borderColor: '#8b5cf6',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: '#8b5cf6',
+            tension: 0.3
+          },
+          {
+            label: 'Bili×100',
+            data: cholestasisData.map(d => d.biliT ? d.biliT * 100 : null),
+            borderColor: '#10b981',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: cholestasisData.map(d => d.isNew ? '#34d399' : '#10b981'),
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              alpNormal: {
+                type: 'box',
+                yMin: REFS.alp.min,
+                yMax: REFS.alp.max,
+                backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                borderColor: 'rgba(245, 158, 11, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'ALP Normal (35–104)',
+                  position: { x: 'start', y: 'center' },
+                  font: { size: 9 },
+                  color: '#f59e0b'
+                }
+              },
+              biliNormal: {
+                type: 'box',
+                yMin: REFS.biliT.min * 100,
+                yMax: REFS.biliT.max * 100,
+                backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Bili Normal (14–90)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 9 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 2500, grid: { color: gridColor }, title: { display: true, text: 'U/L (ALP, GGT) · mg/dL×100 (Bili)', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Transaminases Chart
+    const transData = withAny(labData, ['ast', 'alt']);
+    new Chart(document.getElementById('transaminasesChart'), {
+      type: 'line',
+      data: {
+        labels: transData.map(d => d.date),
+        datasets: [
+          {
+            label: 'AST',
+            data: transData.map(d => d.ast),
+            borderColor: '#f97316',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: transData.map(d => d.isNew ? '#10b981' : '#f97316'),
+            pointBorderWidth: transData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          },
+          {
+            label: 'ALT',
+            data: transData.map(d => d.alt),
+            borderColor: '#06b6d4',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: transData.map(d => d.isNew ? '#10b981' : '#06b6d4'),
+            pointBorderWidth: transData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: 0,
+                yMax: 33,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (0–32/33)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 9 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 120, grid: { color: gridColor }, title: { display: true, text: 'U/L', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Bilirubin Chart
+    const biliData = withAny(labData, ['biliT']);
+    new Chart(document.getElementById('bilirubinChart'), {
+      type: 'line',
+      data: {
+        labels: biliData.map(d => d.date),
+        datasets: [
+          {
+            label: 'Total',
+            data: biliData.map(d => d.biliT),
+            borderColor: '#fbbf24',
+            backgroundColor: 'rgba(251, 191, 36, 0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: biliData.map(d => d.isNew ? '#10b981' : '#fbbf24'),
+            pointBorderWidth: biliData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Directa',
+            data: biliData.map(d => d.biliD),
+            borderColor: '#f59e0b',
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: biliData.map(d => d.isNew ? '#10b981' : '#f59e0b'),
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalTotal: {
+                type: 'box',
+                yMin: REFS.biliT.min,
+                yMax: REFS.biliT.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal Total (0.14–0.9)',
+                  position: { x: 'end', y: 'end' },
+                  font: { size: 9 },
+                  color: '#10b981'
+                }
+              },
+              normalDirecta: {
+                type: 'box',
+                yMin: REFS.biliD.min,
+                yMax: REFS.biliD.max,
+                backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                borderColor: 'rgba(245, 158, 11, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal Directa (0.09–0.3)',
+                  position: { x: 'start', y: 'center' },
+                  font: { size: 9 },
+                  color: '#f59e0b'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 1.2, grid: { color: gridColor }, title: { display: true, text: 'mg/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // RENAL CHART
+    // ═══════════════════════════════════════════════════════════════
+    const renalData = withValue(labData, 'creat');
+    new Chart(document.getElementById('creatinineChart'), {
+      type: 'line',
+      data: {
+        labels: renalData.map(d => d.date),
+        datasets: [{
+          label: 'Creatinina',
+          data: renalData.map(d => d.creat),
+          borderColor: '#ec4899',
+          backgroundColor: 'rgba(236, 72, 153, 0.15)',
+          borderWidth: 2.5,
+          pointRadius: 6,
+          pointBackgroundColor: renalData.map(d => d.isNew ? '#10b981' : '#ec4899'),
+          pointBorderWidth: renalData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.creat.min,
+                yMax: REFS.creat.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (0.51–0.95)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0.4, max: 1.2, grid: { color: gridColor }, title: { display: true, text: 'mg/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // HEMATOLOGIC CHARTS
+    // ═══════════════════════════════════════════════════════════════
+    
+    // NLR Chart
+    const nlrData = withValue(labData, 'nlr');
+    new Chart(document.getElementById('nlrChart'), {
+      type: 'line',
+      data: {
+        labels: nlrData.map(d => d.date),
+        datasets: [{
+          label: 'NLR',
+          data: nlrData.map(d => d.nlr),
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: nlrData.map(d => d.isNew ? '#10b981' : '#3b82f6'),
+          pointBorderWidth: nlrData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              favorableRange: {
+                type: 'box',
+                yMin: 0,
+                yMax: 3,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Favorable (<3)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              },
+              threshold: {
+                type: 'line',
+                yMin: 3,
+                yMax: 3,
+                borderColor: 'rgba(239, 68, 68, 0.6)',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                label: {
+                  display: true,
+                  content: 'Umbral = 3',
+                  position: 'start',
+                  font: { size: 9 },
+                  backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                  color: '#fff',
+                  padding: { x: 6, y: 3 }
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 10, grid: { color: gridColor } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Hemoglobin Chart
+    const hgbData = withValue(labData, 'hgb');
+    new Chart(document.getElementById('hemoglobinChart'), {
+      type: 'line',
+      data: {
+        labels: hgbData.map(d => d.date),
+        datasets: [{
+          label: 'Hemoglobina',
+          data: hgbData.map(d => d.hgb),
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: hgbData.map(d => d.isNew ? '#10b981' : '#ef4444'),
+          pointBorderWidth: hgbData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.hgb.min,
+                yMax: REFS.hgb.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (11.2–15.7)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 7, max: 16, grid: { color: gridColor }, title: { display: true, text: 'g/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // WBC Chart
+    const wbcData = withValue(labData, 'wbc');
+    new Chart(document.getElementById('wbcChart'), {
+      type: 'line',
+      data: {
+        labels: wbcData.map(d => d.date),
+        datasets: [{
+          label: 'WBC',
+          data: wbcData.map(d => d.wbc),
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: wbcData.map(d => d.isNew ? '#10b981' : '#8b5cf6'),
+          pointBorderWidth: wbcData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.wbc.min,
+                yMax: REFS.wbc.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (3.98–10.04)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 12, grid: { color: gridColor }, title: { display: true, text: '×10³/µL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Differential Chart
+    const diffData = withAny(labData, ['neut', 'lymph']);
+    new Chart(document.getElementById('diffChart'), {
+      type: 'line',
+      data: {
+        labels: diffData.map(d => d.date),
+        datasets: [
+          {
+            label: 'Neutrófilos',
+            data: diffData.map(d => d.neut),
+            borderColor: '#f97316',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: diffData.map(d => d.isNew ? '#10b981' : '#f97316'),
+            pointBorderWidth: diffData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          },
+          {
+            label: 'Linfocitos',
+            data: diffData.map(d => d.lymph),
+            borderColor: '#3b82f6',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: diffData.map(d => d.isNew ? '#10b981' : '#3b82f6'),
+            pointBorderWidth: diffData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              neutRange: {
+                type: 'box',
+                yMin: REFS.neut.min,
+                yMax: REFS.neut.max,
+                backgroundColor: 'rgba(249, 115, 22, 0.08)',
+                borderColor: 'rgba(249, 115, 22, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Neut (1.56–6.13)',
+                  position: { x: 'start', y: 'end' },
+                  font: { size: 9 },
+                  color: '#f97316'
+                }
+              },
+              lymphRange: {
+                type: 'box',
+                yMin: REFS.lymph.min,
+                yMax: REFS.lymph.max,
+                backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                borderColor: 'rgba(59, 130, 246, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Linf (1.18–3.74)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 9 },
+                  color: '#3b82f6'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 7, grid: { color: gridColor }, title: { display: true, text: '×10³/µL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // DATA TABLE
+    // ═══════════════════════════════════════════════════════════════
+    function getCellClass(value, key) {
+      if (value === null) return 'cell-na';
+      const ref = REFS[key];
+      if (!ref) return '';
+      if (key === 'nlr') return value < 3 ? 'cell-normal' : 'cell-elevated';
+      if (ref.min !== undefined && value < ref.min) return 'cell-low';
+      if (ref.max !== undefined && value > ref.max) {
+        if (['alp', 'ggt', 'ast', 'alt'].includes(key) && value > ref.max * 3) return 'cell-critical';
+        return 'cell-elevated';
+      }
+      return 'cell-normal';
+    }
+
+    function fmt(v, d = 2) { return v === null ? '—' : (typeof v === 'number' ? v.toFixed(d) : v); }
+
+    const tbody = document.getElementById('tableBody');
+    labData.forEach(row => {
+      const tr = document.createElement('tr');
+      if (row.isNew) tr.classList.add('highlight-row');
+      tr.innerHTML = `
+        <td class="date-col">${row.date}</td>
+        <td class="${getCellClass(row.nlr, 'nlr')}">${fmt(row.nlr)}</td>
+        <td class="${getCellClass(row.hgb, 'hgb')}">${fmt(row.hgb, 1)}</td>
+        <td class="${getCellClass(row.wbc, 'wbc')}">${fmt(row.wbc)}</td>
+        <td class="${getCellClass(row.plt, 'plt')}">${row.plt ?? '—'}</td>
+        <td class="${getCellClass(row.ast, 'ast')}">${fmt(row.ast, 1)}</td>
+        <td class="${getCellClass(row.alt, 'alt')}">${fmt(row.alt, 1)}</td>
+        <td class="${getCellClass(row.alp, 'alp')}">${fmt(row.alp, 1)}</td>
+        <td class="${getCellClass(row.ggt, 'ggt')}">${row.ggt ?? '—'}</td>
+        <td class="${getCellClass(row.biliT, 'biliT')}">${fmt(row.biliT)}</td>
+        <td class="${getCellClass(row.creat, 'creat')}">${fmt(row.creat)}</td>
+        <td class="${row.ldh ? (row.ldh > 214 ? 'cell-elevated' : 'cell-normal') : ''}">${row.ldh ?? '—'}</td>
+        <td class="${row.dimerD ? (row.dimerD > 0.5 ? 'cell-critical' : 'cell-normal') : ''}">${row.dimerD ? row.dimerD.toFixed(3) : '—'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  </script>
+</body>
+</html>
