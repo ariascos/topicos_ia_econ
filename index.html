@@ -169,8 +169,9 @@ textarea.form-input{resize:vertical;min-height:100px}
       <input class="form-input" id="fArtResenado" placeholder="Autor(es), Año — Título del artículo"/>
     </div>
     <div class="form-group">
-      <label class="form-label">Link al artículo propio (PDF, arXiv, SSRN…)</label>
-      <input class="form-input" id="fLinkArt" placeholder="https://…"/>
+      <label class="form-label">Link al artículo propio</label>
+      <input class="form-input" id="fLinkArt" placeholder="https://arxiv.org/… · SSRN · Google Drive · etc."/>
+      <p style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);margin-top:0.35rem">Puede ser arXiv, SSRN, Google Drive u otro link público. Campo opcional.</p>
     </div>
 
     <div class="form-group">
@@ -236,7 +237,7 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ hd: 'uniandes.edu.co' });
 
-const ADMIN_EMAIL = 'alvaro.riascos@uniandes.edu.co';
+const ADMIN_EMAIL = 'ariascos@uniandes.edu.co';
 
 let currentUser = null;
 let isAdmin = false;
