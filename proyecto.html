@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Trabajos Finales · Tópicos en IA y Economía</title>
+<title>LLMs como herramientas de política económica · Tópicos IA y Economía</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -13,7 +13,6 @@
   --accent:#7eb8d4;--accent2:#a8d4e8;
   --text:#e8f0ec;--text-muted:#7a9e89;--text-dim:#4d7060;
   --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Lora',serif;
-  --card-radius:10px;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -32,62 +31,91 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .btn-primary{background:var(--accent);color:var(--bg);font-weight:600}
 .btn-primary:hover{background:var(--accent2)}
 
-/* HERO BAND */
-.hero{padding:3.5rem 2rem 2.5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;top:-60px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(126,184,212,0.06) 0%,transparent 70%);pointer-events:none}
-.hero-inner{max-width:1200px;margin:0 auto}
-.hero-label{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem}
-.hero-title{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;line-height:1.15;color:var(--text);max-width:640px}
-.hero-title em{font-style:italic;color:var(--accent)}
-.hero-sub{margin-top:0.85rem;font-size:0.9rem;color:var(--text-muted);max-width:560px;line-height:1.6}
-.hero-meta{margin-top:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
-.hero-stat{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim)}
-.hero-stat strong{color:var(--text-muted);font-weight:500}
+/* BACK NAV */
+.back-nav{max-width:900px;margin:0 auto;padding:1.5rem 2rem 0}
+.back-link{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.68rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.05em;transition:color 0.15s}
+.back-link:hover{color:var(--accent)}
+.back-link svg{width:12px;height:12px}
 
-/* TABS */
-.tabs-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;position:sticky;top:76px;z-index:90}
-.tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:0;align-items:stretch}
-.tab{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.06em;padding:0.9rem 1.1rem;color:var(--text-muted);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all 0.18s;white-space:nowrap}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+/* ARTICLE HEADER */
+.art-header{max-width:900px;margin:0 auto;padding:2rem 2rem 0}
+.art-year-tag{display:inline-block;font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:rgba(126,184,212,0.08);border:1px solid rgba(126,184,212,0.2);padding:0.25rem 0.65rem;border-radius:4px;margin-bottom:1rem}
+.art-title{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2rem);font-weight:700;line-height:1.2;color:var(--text);margin-bottom:1.25rem}
+.art-authors{display:flex;flex-wrap:wrap;gap:0.5rem 1.25rem;margin-bottom:1.5rem}
+.art-author{display:inline-flex;align-items:center;gap:0.45rem;font-family:var(--mono);font-size:0.72rem;color:var(--text-muted)}
+.art-author-name{color:var(--text)}
+.art-author-link{color:var(--accent);opacity:0.65;transition:opacity 0.15s;display:inline-flex;align-items:center;gap:0.2rem;text-decoration:none;font-size:0.65rem}
+.art-author-link:hover{opacity:1}
+.art-author-link svg{width:11px;height:11px}
 
-/* GRID */
-.grid-section{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 4rem}
-.grid-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem}
-.grid-year-label{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)}
-.grid-count{font-family:var(--mono);font-size:0.68rem;color:var(--text-dim)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:580px){.grid{grid-template-columns:1fr}}
+/* ARTICLE LINK BAR */
+.art-link-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0.85rem 2rem;margin-bottom:2.5rem}
+.art-link-bar-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.art-link-label{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-right:0.25rem}
+.art-link-btn{display:inline-flex;align-items:center;gap:0.4rem;font-family:var(--mono);font-size:0.72rem;font-weight:500;color:var(--accent);background:rgba(126,184,212,0.06);border:1px solid rgba(126,184,212,0.2);padding:0.42rem 0.9rem;border-radius:5px;text-decoration:none;transition:all 0.17s}
+.art-link-btn:hover{background:rgba(126,184,212,0.14);border-color:rgba(126,184,212,0.4)}
+.art-link-btn svg{width:13px;height:13px}
+.art-link-admin{margin-left:auto}
+.btn-delete{display:inline-flex;align-items:center;gap:0.35rem;font-family:var(--mono);font-size:0.65rem;color:#c0392b;background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.2);padding:0.38rem 0.8rem;border-radius:5px;cursor:pointer;transition:all 0.17s}
+.btn-delete:hover{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.4)}
+.btn-delete svg{width:11px;height:11px}
 
-/* CARD */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--card-radius);overflow:hidden;display:flex;flex-direction:column;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s}
-.card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
-.card-img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--bg3);display:block;position:relative}
-.card-img-placeholder{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--bg3) 0%,#1a3d28 100%);display:flex;align-items:center;justify-content:center}
-.card-img-placeholder svg{opacity:0.12}
-.card-body{padding:1.25rem;flex:1;display:flex;flex-direction:column;gap:0.6rem}
-.card-authors{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
-.author-chip{display:inline-flex;align-items:center;gap:0.3rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-muted)}
-.author-link{color:var(--accent);opacity:0.7;transition:opacity 0.15s;display:inline-flex;align-items:center}
-.author-link:hover{opacity:1}
-.author-link svg{width:10px;height:10px}
-.author-sep{color:var(--text-dim);font-size:0.6rem}
-.card-title{font-family:var(--serif);font-size:1rem;font-weight:600;line-height:1.35;color:var(--text)}
-.card-excerpt{font-size:0.82rem;line-height:1.6;color:var(--text-muted);flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card-footer{padding:0 1.25rem 1.25rem;display:flex;gap:0.65rem;align-items:center}
-.card-btn-resena{font-family:var(--sans);font-size:0.75rem;font-weight:500;color:var(--accent);background:rgba(126,184,212,0.08);border:1px solid rgba(126,184,212,0.2);padding:0.38rem 0.85rem;border-radius:5px;cursor:pointer;transition:all 0.17s;text-decoration:none;display:inline-block}
-.card-btn-resena:hover{background:rgba(126,184,212,0.15);border-color:rgba(126,184,212,0.4)}
-.card-btn-art{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);background:transparent;border:1px solid var(--border);padding:0.38rem 0.75rem;border-radius:5px;cursor:pointer;transition:all 0.17s;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem}
-.card-btn-art:hover{color:var(--text-muted);border-color:var(--border2)}
-.card-btn-art svg{width:10px;height:10px}
+/* RESENA BODY */
+.resena-wrap{max-width:900px;margin:0 auto;padding:0 2rem 3rem;display:grid;grid-template-columns:1fr 220px;gap:3rem;align-items:start}
+@media(max-width:720px){.resena-wrap{grid-template-columns:1fr}}
+.resena-main{}
+.resena-section-label{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem}
+.resena-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.resena-text{font-family:var(--serif);font-size:1rem;line-height:1.85;color:var(--text);}
+.resena-text p{margin-bottom:1.25rem}
+.resena-text p:last-child{margin-bottom:0}
 
-/* YEAR DIVIDER */
-.year-block{margin-bottom:3rem}
-.year-divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem}
-.year-divider-num{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--text-dim)}
-.year-divider-line{flex:1;height:1px;background:var(--border)}
-.year-divider-count{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim)}
+/* SIDEBAR */
+.resena-sidebar{}
+.sidebar-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:1rem}
+.sidebar-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.75rem}
+.sidebar-article-title{font-family:var(--serif);font-size:0.88rem;line-height:1.4;color:var(--text);margin-bottom:0.5rem}
+.sidebar-article-meta{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);line-height:1.5}
+
+/* COMMENTS */
+.comments-wrap{max-width:900px;margin:0 auto;padding:0 2rem 4rem;border-top:1px solid var(--border);padding-top:2.5rem}
+.comments-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem}
+.comments-title{font-family:var(--serif);font-size:1.1rem;font-weight:600}
+.comments-count{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim)}
+.comment-input-area{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:2rem}
+.comment-input-header{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.85rem}
+.comment-avatar{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.6rem;color:var(--text-muted);flex-shrink:0}
+.comment-input-name{font-family:var(--mono);font-size:0.7rem;color:var(--text-muted)}
+.comment-input-hint{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);margin-left:auto}
+textarea.comment-box{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.75rem;color:var(--text);font-family:var(--sans);font-size:0.85rem;resize:vertical;min-height:80px;outline:none;transition:border-color 0.15s}
+textarea.comment-box:focus{border-color:var(--accent)}
+textarea.comment-box::placeholder{color:var(--text-dim)}
+.comment-input-footer{display:flex;justify-content:space-between;align-items:center;margin-top:0.65rem}
+.comment-input-tip{font-family:var(--mono);font-size:0.6rem;color:var(--text-dim)}
+.comment-input-tip span{color:var(--accent)}
+
+/* COMMENT LIST */
+.comment{display:flex;gap:0.85rem;margin-bottom:1.5rem;position:relative}
+.comment-avatar-lg{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.68rem;color:var(--text-muted);flex-shrink:0}
+.comment-body{flex:1}
+.comment-meta{display:flex;align-items:baseline;gap:0.6rem;margin-bottom:0.4rem;flex-wrap:wrap}
+.comment-author{font-family:var(--mono);font-size:0.72rem;font-weight:500;color:var(--accent2)}
+.comment-author.is-team{color:var(--accent)}
+.comment-role{font-family:var(--mono);font-size:0.58rem;color:var(--text-dim);background:var(--bg3);border:1px solid var(--border);padding:0.1rem 0.4rem;border-radius:3px}
+.comment-time{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim)}
+.comment-text{font-size:0.87rem;line-height:1.65;color:var(--text)}
+.comment-text .mention{color:var(--accent);font-weight:500}
+.comment-actions{display:flex;gap:0.75rem;margin-top:0.5rem}
+.comment-action{font-family:var(--mono);font-size:0.62rem;color:var(--text-dim);background:none;border:none;cursor:pointer;padding:0;transition:color 0.15s}
+.comment-action:hover{color:var(--text-muted)}
+.comment-action.delete{color:rgba(192,57,43,0.5)}
+.comment-action.delete:hover{color:rgba(192,57,43,0.9)}
+.comment-divider{border:none;border-top:1px solid var(--border);margin:0.25rem 0 1.5rem}
+
+/* LOGIN PROMPT */
+.login-prompt{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.25rem;text-align:center;margin-bottom:2rem}
+.login-prompt p{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.85rem}
+.login-prompt p span{color:var(--accent)}
 
 /* FOOTER */
 .site-footer{border-top:1px solid var(--border);padding:2rem;text-align:center}
@@ -102,7 +130,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 <body>
 
 <div class="mockup-bar">
-  <span>MOCKUP — Pantalla 1 · Listado de trabajos</span>
+  <span>MOCKUP — Pantalla 2 · Vista de proyecto</span>
   <span class="dim">Solo diseño · Sin funcionalidad</span>
 </div>
 
@@ -117,266 +145,182 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
       <span class="header-inst">Universidad de los Andes · Facultad de Economía</span>
     </div>
     <button class="btn btn-ghost">Iniciar sesión</button>
-    <a href="proyecto.html" class="btn btn-primary">+ Publicar trabajo</a>
+    <button class="btn btn-primary">+ Publicar trabajo</button>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <p class="hero-label">Repositorio académico</p>
-    <h1 class="hero-title">Trabajos finales<br><em>de los estudiantes</em></h1>
-    <p class="hero-sub">Reseñas y artículos de investigación publicados por los grupos de cada semestre. Un archivo que crece con el tiempo.</p>
-    <div class="hero-meta">
-      <span class="hero-stat"><strong>8</strong> trabajos publicados</span>
-      <span class="hero-stat"><strong>2</strong> cohortes</span>
-      <span class="hero-stat"><strong>24</strong> estudiantes</span>
+<!-- BACK NAV -->
+<div class="back-nav">
+  <a href="index.html" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver a trabajos 2025
+  </a>
+</div>
+
+<!-- ARTICLE HEADER -->
+<div class="art-header">
+  <span class="art-year-tag">2025 · Semestre I</span>
+  <h1 class="art-title">Modelos de lenguaje como herramientas de política económica: oportunidades y límites</h1>
+  <div class="art-authors">
+    <div class="art-author">
+      <span class="art-author-name">Ana Torres</span>
+      <a class="art-author-link" href="#" title="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="art-author">
+      <span class="art-author-name">Carlos Mejía</span>
+    </div>
+    <div class="art-author">
+      <span class="art-author-name">Laura Ríos</span>
+      <a class="art-author-link" href="#" title="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H6.5v-7H9v7zm-1.25-8.27a1.37 1.37 0 110-2.74 1.37 1.37 0 010 2.74zM18 17h-2.5v-3.5c0-1-.02-2.28-1.39-2.28-1.39 0-1.61 1.09-1.61 2.21V17H10v-7h2.39v.96h.03c.33-.63 1.14-1.3 2.35-1.3 2.51 0 2.98 1.65 2.98 3.8V17z"/></svg>
+        LinkedIn
+      </a>
     </div>
   </div>
-</section>
+</div>
 
-<!-- TABS -->
-<nav class="tabs-bar">
-  <div class="tabs-inner">
-    <button class="tab active" onclick="filterYear('all')">Todos</button>
-    <button class="tab" onclick="filterYear('2025')">2025</button>
-    <button class="tab" onclick="filterYear('2024')">2024</button>
-  </div>
-</nav>
-
-<!-- GRID CONTENT -->
-<main class="grid-section">
-
-  <!-- 2025 -->
-  <div class="year-block" data-year="2025">
-    <div class="year-divider">
-      <span class="year-divider-num">2025</span>
-      <div class="year-divider-line"></div>
-      <span class="year-divider-count">5 trabajos</span>
+<!-- ARTICLE LINK BAR -->
+<div class="art-link-bar">
+  <div class="art-link-bar-inner">
+    <span class="art-link-label">Artículo</span>
+    <a href="#" class="art-link-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Ver PDF del artículo
+    </a>
+    <span style="font-family:var(--mono);font-size:0.62rem;color:var(--text-dim)">·</span>
+    <a href="#" class="art-link-btn" style="color:var(--text-muted);background:transparent;border-color:var(--border)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Ver en arXiv
+    </a>
+    <div class="art-link-admin">
+      <button class="btn-delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+        Eliminar trabajo (admin)
+      </button>
     </div>
-    <div class="grid">
+  </div>
+</div>
 
-      <!-- Card 1 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><rect x="8" y="14" width="44" height="32" rx="3" stroke="#7eb8d4" stroke-width="2"/><line x1="8" y1="22" x2="52" y2="22" stroke="#7eb8d4" stroke-width="1.5"/><rect x="14" y="28" width="12" height="8" rx="1" fill="#7eb8d4" opacity=".3"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">
-              Ana Torres
-              <a class="author-link" href="#" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Carlos Mejía</span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">
-              Laura Ríos
-              <a class="author-link" href="#" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H6.5v-7H9v7zm-1.25-8.27a1.37 1.37 0 110-2.74 1.37 1.37 0 010 2.74zM18 17h-2.5v-3.5c0-1-.02-2.28-1.39-2.28-1.39 0-1.61 1.09-1.61 2.21V17H10v-7h2.39v.96h.03c.33-.63 1.14-1.3 2.35-1.3 2.51 0 2.98 1.65 2.98 3.8V17z"/></svg></a>
-            </span>
-          </div>
-          <h2 class="card-title">Modelos de lenguaje como herramientas de política económica: oportunidades y límites</h2>
-          <p class="card-excerpt">Este trabajo examina cómo los LLMs pueden emplearse para simular respuestas de agentes heterogéneos ante shocks de política monetaria, evaluando su fiabilidad frente a modelos estructurales tradicionales.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Ver artículo</a>
-        </div>
-      </div>
+<!-- RESENA + SIDEBAR -->
+<div class="resena-wrap">
+  <div class="resena-main">
+    <p class="resena-section-label">Reseña del grupo</p>
+    <div class="resena-text">
+      <p>En los últimos años, los modelos de lenguaje de gran escala han emergido como herramientas con potencial transformador en múltiples dominios profesionales. Sin embargo, su aplicación en el diseño y evaluación de política económica plantea interrogantes fundamentales sobre validez, interpretabilidad y los límites propios de estos sistemas. El artículo de Argyle et al. (2023) que reseñamos en este trabajo propone una idea provocadora: que los LLMs pueden funcionar como «silicone sampling» —una suerte de laboratorio de agentes heterogéneos— para simular respuestas de distintos perfiles socioeconómicos ante cambios de política.</p>
+      <p>Nuestra lectura del trabajo encontró tanto virtudes metodológicas claras como limitaciones que los autores reconocen parcialmente. En el lado positivo, la propuesta ofrece una alternativa de bajo costo para explorar efectos distributivos antes de implementar políticas, algo especialmente valioso en contextos con restricciones presupuestales para estudios de campo. La capacidad del modelo para reproducir patrones de respuesta diferenciados por nivel educativo y estrato es notable y abre líneas de investigación interesantes.</p>
+      <p>No obstante, identificamos tres problemas centrales que limitan la generalización de sus conclusiones. Primero, los LLMs entrenados predominantemente en texto anglófono reproducen sesgos culturales que distorsionan la simulación de agentes en economías emergentes como la colombiana. Segundo, la validación del «silicon sampling» se realiza contra encuestas de opinión, no contra comportamiento económico observado, lo que deja abierta la pregunta de si la coherencia narrativa implica validez predictiva. Tercero, el artículo no aborda los riesgos de circularidad: un modelo entrenado en textos de política pública tenderá a reproducir los supuestos dominantes de esos textos, no a cuestionarlos.</p>
+      <p>En nuestra extensión empírica, replicamos el experimento de Argyle et al. usando GPT-4 con personas calibradas para el contexto colombiano (SISBEN, nivel educativo, región) y comparamos las distribuciones de respuesta con datos del DANE para tres escenarios de política monetaria. Los resultados son mixtos: el modelo captura bien las tendencias direccionales pero sobreestima sistemáticamente la sensibilidad de los agentes de menor ingreso a cambios en tasas de interés, posiblemente por la sobrerrepresentación de análisis financieros en el corpus de entrenamiento.</p>
+      <p>Concluimos que los LLMs son herramientas útiles de exploración preliminar en el ciclo de diseño de política, pero no sustituyen los modelos estructurales calibrados con microdatos nacionales. Su mayor valor puede estar en la generación de hipótesis heterogéneas y en la comunicación de escenarios a audiencias no especializadas, más que en la predicción cuantitativa.</p>
+    </div>
+  </div>
+  <aside class="resena-sidebar">
+    <div class="sidebar-card">
+      <p class="sidebar-label">Artículo reseñado</p>
+      <p class="sidebar-article-title">Can Large Language Models be Used to Provide Therapeutic Support?</p>
+      <p class="sidebar-article-meta">Argyle et al. (2023)<br>American Political Science Review</p>
+    </div>
+    <div class="sidebar-card">
+      <p class="sidebar-label">Publicado</p>
+      <p class="sidebar-article-meta" style="color:var(--text-muted)">15 de mayo, 2025<br>Semestre 2025-I</p>
+    </div>
+  </aside>
+</div>
 
-      <!-- Card 2 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="20" stroke="#7eb8d4" stroke-width="2"/><polyline points="20,30 27,37 40,23" stroke="#7eb8d4" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">
-              Santiago Vera
-              <a class="author-link" href="#" title="Web personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Daniela Castro</span>
-          </div>
-          <h2 class="card-title">Predicción de desempleo regional con redes neuronales recurrentes: el caso colombiano</h2>
-          <p class="card-excerpt">Usando series de tiempo departamentales del DANE, comparamos el desempeño de arquitecturas LSTM y GRU frente a modelos VAR para predecir variaciones trimestrales en la tasa de desempleo.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>arXiv</a>
-        </div>
-      </div>
+<!-- COMMENTS SECTION -->
+<div class="comments-wrap">
+  <div class="comments-header">
+    <h2 class="comments-title">Comentarios</h2>
+    <span class="comments-count">4 comentarios</span>
+  </div>
 
-      <!-- Card 3 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><rect x="10" y="34" width="8" height="16" fill="#7eb8d4" opacity=".25"/><rect x="22" y="24" width="8" height="26" fill="#7eb8d4" opacity=".35"/><rect x="34" y="16" width="8" height="34" fill="#7eb8d4" opacity=".5"/><rect x="46" y="28" width="8" height="22" fill="#7eb8d4" opacity=".3"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">Juliana Herrera</span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">
-              Mateo López
-              <a class="author-link" href="#" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Sofía Ramos</span>
-          </div>
-          <h2 class="card-title">Sesgos algorítmicos en sistemas de crédito: evidencia de entidades financieras colombianas</h2>
-          <p class="card-excerpt">Analizamos los disparate impact y statistical parity en modelos de scoring crediticio, proponiendo ajustes post-procesamiento que reducen sesgo sin pérdida significativa de precisión.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Ver artículo</a>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><path d="M10 40 Q20 20 30 30 Q40 40 50 20" stroke="#7eb8d4" stroke-width="2" fill="none"/><circle cx="30" cy="30" r="3" fill="#7eb8d4" opacity=".5"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">
-              Camilo Ortiz
-              <a class="author-link" href="#" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H6.5v-7H9v7zm-1.25-8.27a1.37 1.37 0 110-2.74 1.37 1.37 0 010 2.74zM18 17h-2.5v-3.5c0-1-.02-2.28-1.39-2.28-1.39 0-1.61 1.09-1.61 2.21V17H10v-7h2.39v.96h.03c.33-.63 1.14-1.3 2.35-1.3 2.51 0 2.98 1.65 2.98 3.8V17z"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Isabella Mora</span>
-          </div>
-          <h2 class="card-title">Detección de noticias falsas en redes sociales colombianas mediante transformers multilingües</h2>
-          <p class="card-excerpt">Ajustamos un modelo XLM-RoBERTa sobre un corpus propio de titulares verificados por Colombia Check y AFP Colombia, alcanzando un F1 de 0.91 en clasificación binaria.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>SSRN</a>
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><polygon points="30,10 52,46 8,46" stroke="#7eb8d4" stroke-width="2" fill="none"/><line x1="30" y1="22" x2="30" y2="36" stroke="#7eb8d4" stroke-width="2"/><circle cx="30" cy="40" r="2" fill="#7eb8d4"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">Valentina Suárez</span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">
-              Andrés Patiño
-              <a class="author-link" href="#" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></a>
-            </span>
-          </div>
-          <h2 class="card-title">Automatización y desplazamiento laboral: simulaciones con modelos de equilibrio general computacional</h2>
-          <p class="card-excerpt">Calibramos un modelo OLG con heterogeneidad en habilidades para cuantificar el efecto distribucional de la automatización en sectores manufactureros colombianos entre 2025 y 2040.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Ver artículo</a>
-        </div>
-      </div>
-
+  <!-- Comment input — estado: sesión activa -->
+  <div class="comment-input-area">
+    <div class="comment-input-header">
+      <div class="comment-avatar">JP</div>
+      <span class="comment-input-name">juan.perez@uniandes.edu.co</span>
+      <span class="comment-input-hint">Usa @nombre para mencionar a alguien</span>
+    </div>
+    <textarea class="comment-box" placeholder="Escribe un comentario… Puedes usar @NombreAutor para dirigirte a alguien"></textarea>
+    <div class="comment-input-footer">
+      <span class="comment-input-tip">Solo cuentas <span>@uniandes.edu.co</span> pueden comentar</span>
+      <button class="btn btn-primary" style="font-size:0.75rem;padding:0.38rem 0.9rem">Publicar</button>
     </div>
   </div>
 
-  <!-- 2024 -->
-  <div class="year-block" data-year="2024">
-    <div class="year-divider">
-      <span class="year-divider-num">2024</span>
-      <div class="year-divider-line"></div>
-      <span class="year-divider-count">3 trabajos</span>
-    </div>
-    <div class="grid">
-
-      <!-- Card 6 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><circle cx="20" cy="30" r="10" stroke="#7eb8d4" stroke-width="1.5" opacity=".4"/><circle cx="40" cy="30" r="10" stroke="#7eb8d4" stroke-width="1.5" opacity=".4"/><path d="M25 24 Q30 30 35 24" stroke="#7eb8d4" stroke-width="1.5" fill="none" opacity=".6"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">
-              Nicolás Rojas
-              <a class="author-link" href="#" title="Web personal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Manuela Gómez</span>
-          </div>
-          <h2 class="card-title">Teoría de juegos y estrategias de adopción de IA en oligopolios bancarios latinoamericanos</h2>
-          <p class="card-excerpt">Modelamos la adopción de sistemas de IA como un juego de timing con información incompleta, encontrando equilibrios de Nash que explican la aceleración simultánea observada en Bancolombia, Davivienda y Banco de Bogotá.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>SSRN</a>
-        </div>
+  <!-- Comment 1 — external student -->
+  <div class="comment">
+    <div class="comment-avatar-lg">MR</div>
+    <div class="comment-body">
+      <div class="comment-meta">
+        <span class="comment-author">martina.rodriguez</span>
+        <span class="comment-time">hace 3 días</span>
       </div>
-
-      <!-- Card 7 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><rect x="12" y="12" width="14" height="14" rx="2" stroke="#7eb8d4" stroke-width="1.5" opacity=".5"/><rect x="34" y="12" width="14" height="14" rx="2" stroke="#7eb8d4" stroke-width="1.5" opacity=".5"/><rect x="12" y="34" width="14" height="14" rx="2" stroke="#7eb8d4" stroke-width="1.5" opacity=".5"/><rect x="34" y="34" width="14" height="14" rx="2" stroke="#7eb8d4" stroke-width="1.5" opacity=".8"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">Paula Jiménez</span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">
-              Felipe Arango
-              <a class="author-link" href="#" title="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H6.5v-7H9v7zm-1.25-8.27a1.37 1.37 0 110-2.74 1.37 1.37 0 010 2.74zM18 17h-2.5v-3.5c0-1-.02-2.28-1.39-2.28-1.39 0-1.61 1.09-1.61 2.21V17H10v-7h2.39v.96h.03c.33-.63 1.14-1.3 2.35-1.3 2.51 0 2.98 1.65 2.98 3.8V17z"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Samuel Torres</span>
-          </div>
-          <h2 class="card-title">Clasificación automática de sentimiento en reportes del Banco de la República con BERT en español</h2>
-          <p class="card-excerpt">Fine-tuneamos BETO (BERT en español) sobre 15 años de informes de política monetaria para extraer señales de sentimiento hawkish/dovish y correlacionarlas con decisiones de tasa de interés.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Ver artículo</a>
-        </div>
+      <p class="comment-text">Excelente trabajo. El punto sobre el sesgo anglófono en LLMs me parece el más relevante y creo que está subvalorado en la literatura. ¿Probaron hacer el experimento con algún modelo entrenado sobre corpus hispanohablantes como Llama español o BLOOM?</p>
+      <div class="comment-actions">
+        <button class="comment-action">Responder</button>
       </div>
-
-      <!-- Card 8 -->
-      <div class="card">
-        <div class="card-img-placeholder">
-          <svg width="60" height="60" viewBox="0 0 60 60" fill="none"><path d="M15 45 L15 25 L30 15 L45 25 L45 45 Z" stroke="#7eb8d4" stroke-width="1.5" fill="none" opacity=".5"/><rect x="24" y="33" width="12" height="12" stroke="#7eb8d4" stroke-width="1.5" fill="none" opacity=".7"/></svg>
-        </div>
-        <div class="card-body">
-          <div class="card-authors">
-            <span class="author-chip">
-              María Fernanda Ruiz
-              <a class="author-link" href="#" title="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 7.43c.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></a>
-            </span>
-            <span class="author-sep">·</span>
-            <span class="author-chip">Diego Vargas</span>
-          </div>
-          <h2 class="card-title">Modelos de difusión generativa para síntesis de datos económicos sintéticos con preservación de privacidad</h2>
-          <p class="card-excerpt">Evaluamos la calidad estadística y privacidad diferencial de datos tabulares sintéticos generados con TabDDPM sobre microdatos de hogares colombianos (GEIH), comparando utilidad analítica con datos originales.</p>
-        </div>
-        <div class="card-footer">
-          <a href="proyecto.html" class="card-btn-resena">Leer reseña →</a>
-          <a href="#" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>arXiv</a>
-        </div>
-      </div>
-
     </div>
   </div>
-</main>
+  <hr class="comment-divider"/>
+
+  <!-- Comment 2 — author response -->
+  <div class="comment">
+    <div class="comment-avatar-lg" style="background:rgba(126,184,212,0.12);border-color:rgba(126,184,212,0.3);color:var(--accent)">AT</div>
+    <div class="comment-body">
+      <div class="comment-meta">
+        <span class="comment-author is-team">ana.torres</span>
+        <span class="comment-role">autora</span>
+        <span class="comment-time">hace 2 días</span>
+      </div>
+      <p class="comment-text"><span class="mention">@martina.rodriguez</span> ¡Muy buena pregunta! Sí lo intentamos con BLOOM-7b1 pero los resultados fueron menos coherentes para el escenario de política monetaria —probablemente por menor especialización en textos económicos formales. Sería interesante repetirlo con modelos más recientes entrenados en español técnico.</p>
+      <div class="comment-actions">
+        <button class="comment-action">Responder</button>
+      </div>
+    </div>
+  </div>
+  <hr class="comment-divider"/>
+
+  <!-- Comment 3 -->
+  <div class="comment">
+    <div class="comment-avatar-lg">SV</div>
+    <div class="comment-body">
+      <div class="comment-meta">
+        <span class="comment-author">santiago.vera</span>
+        <span class="comment-time">hace 1 día</span>
+      </div>
+      <p class="comment-text">El argumento de circularidad en la sección de limitaciones me parece el más original del paper. ¿Tienen alguna referencia sobre cómo otros trabajos han intentado mitigar ese problema? Pensando en el contexto del Banco de la República.</p>
+      <div class="comment-actions">
+        <button class="comment-action">Responder</button>
+        <button class="comment-action delete">Eliminar (admin)</button>
+      </div>
+    </div>
+  </div>
+  <hr class="comment-divider"/>
+
+  <!-- Comment 4 — author response -->
+  <div class="comment">
+    <div class="comment-avatar-lg" style="background:rgba(126,184,212,0.12);border-color:rgba(126,184,212,0.3);color:var(--accent)">CM</div>
+    <div class="comment-body">
+      <div class="comment-meta">
+        <span class="comment-author is-team">carlos.mejia</span>
+        <span class="comment-role">autor</span>
+        <span class="comment-time">hace 22 horas</span>
+      </div>
+      <p class="comment-text"><span class="mention">@santiago.vera</span> Hay un paper de Bender et al. (2021) —el «stochastic parrots»— que toca el tema tangencialmente, pero no desde el ángulo de política pública. En el contexto del Banrep sería interesante ver si los modelos reproducen el lenguaje de los propios informes de política que usarían como corpus. Es básicamente una pregunta sobre independencia estadística entre training data y benchmark.</p>
+      <div class="comment-actions">
+        <button class="comment-action">Responder</button>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <footer class="site-footer">
   <p>Tópicos en Inteligencia Artificial y Economía &nbsp;·&nbsp; Universidad de los Andes &nbsp;·&nbsp; Facultad de Economía</p>
 </footer>
 
-<script>
-function filterYear(year) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-  document.querySelectorAll('.year-block').forEach(b => {
-    b.style.display = (year === 'all' || b.dataset.year === year) ? '' : 'none';
-  });
-}
-</script>
 </body>
 </html>
