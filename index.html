@@ -220,7 +220,7 @@ textarea.form-input{resize:vertical;min-height:100px}
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBYm26usL3m-CIyguEkZwg6PJL0nDhnUKM",
@@ -243,6 +243,7 @@ let currentUser = null;
 let isAdmin = false;
 let allTrabajos = [];
 let pendingDeleteId = null;
+let editandoId = null;
 
 // ── AUTH ──────────────────────────────────────────────────────
 window.signIn = async () => {
@@ -264,7 +265,7 @@ onAuthStateChanged(auth, user => {
   currentUser = user;
   isAdmin = user && user.email === ADMIN_EMAIL;
   renderAuth();
-  renderTrabajos();
+  loadTrabajos();
 });
 
 function renderAuth() {
@@ -273,7 +274,8 @@ function renderAuth() {
   if (currentUser) {
     const img = currentUser.photoURL ? `<img src="${currentUser.photoURL}" class="user-avatar"/>` : '';
     const name = currentUser.displayName || currentUser.email.split('@')[0];
-    area.innerHTML = `<span class="user-chip">${img} ${name}</span>
+    const adminBadge = isAdmin ? `<span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);background:rgba(126,184,212,0.1);border:1px solid rgba(126,184,212,0.25);padding:0.1rem 0.4rem;border-radius:3px;margin-left:0.3rem">admin</span>` : '';
+    area.innerHTML = `<span class="user-chip">${img} ${name}${adminBadge}</span>
       <button class="btn btn-ghost" style="margin-left:0.5rem" onclick="window.signOutUser()">Salir</button>`;
     btnPublicar.style.display = 'inline-flex';
   } else {
@@ -373,6 +375,7 @@ function renderCard(t) {
       <div class="card-footer">
         <a href="proyecto.html?id=${t.id}" class="card-btn-resena">Leer reseña →</a>
         ${t.linkArticulo ? `<a href="${t.linkArticulo}" target="_blank" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Ver artículo</a>` : ''}
+        ${(isAdmin || (currentUser && currentUser.email === t.autorEmail)) ? `<button class="card-btn-art" onclick="openModalEditar('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Editar</button>` : ''}
         ${isAdmin ? `<button class="btn btn-danger card-admin" onclick="confirmDeleteTrabajo('${t.id}','${t.titulo.replace(/'/g,"\'")}')">Eliminar</button>` : ''}
       </div>
     </div>
@@ -380,8 +383,49 @@ function renderCard(t) {
 }
 
 // ── PUBLICAR ──────────────────────────────────────────────────
-window.openModal = () => document.getElementById('modalOverlay').classList.add('open');
-window.closeModal = () => document.getElementById('modalOverlay').classList.remove('open');
+window.openModal = () => {
+  editandoId = null;
+  document.querySelector('.modal h2').textContent = 'Publicar trabajo';
+  document.querySelector('.modal-footer .btn-primary').textContent = 'Publicar';
+  // reset form
+  ['fTitulo','fExtracto','fResena','fArtResenado','fLinkArt','fSemestre'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('fAnio').value = new Date().getFullYear();
+  document.getElementById('autoresContainer').innerHTML = `<div class="author-entry">
+    <input class="form-input" placeholder="Nombre del integrante" data-field="nombre"/>
+    <input class="form-input" placeholder="Link personal (opcional)" data-field="link" style="max-width:180px"/>
+    <button class="btn-remove" onclick="removeAuthor(this)">×</button>
+  </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+};
+
+window.openModalEditar = (id) => {
+  const t = allTrabajos.find(t => t.id === id);
+  if (!t) return;
+  editandoId = id;
+  document.querySelector('.modal h2').textContent = 'Editar trabajo';
+  document.querySelector('.modal-footer .btn-primary').textContent = 'Guardar cambios';
+  document.getElementById('fTitulo').value = t.titulo || '';
+  document.getElementById('fExtracto').value = t.extracto || '';
+  document.getElementById('fResena').value = t.resena || '';
+  document.getElementById('fArtResenado').value = t.artResenado || '';
+  document.getElementById('fLinkArt').value = t.linkArticulo || '';
+  document.getElementById('fAnio').value = t.anio || new Date().getFullYear();
+  document.getElementById('fSemestre').value = t.semestre || '';
+  // fill authors
+  const container = document.getElementById('autoresContainer');
+  container.innerHTML = '';
+  (t.autores || [{ nombre: '', link: '' }]).forEach(a => {
+    const div = document.createElement('div');
+    div.className = 'author-entry';
+    div.innerHTML = `<input class="form-input" placeholder="Nombre del integrante" data-field="nombre" value="${a.nombre || ''}"/>
+      <input class="form-input" placeholder="Link personal (opcional)" data-field="link" style="max-width:180px" value="${a.link || ''}"/>
+      <button class="btn-remove" onclick="removeAuthor(this)">×</button>`;
+    container.appendChild(div);
+  });
+  document.getElementById('modalOverlay').classList.add('open');
+};
+
+window.closeModal = () => { document.getElementById('modalOverlay').classList.remove('open'); editandoId = null; };
 
 window.addAuthor = () => {
   const container = document.getElementById('autoresContainer');
@@ -409,14 +453,22 @@ window.publicarTrabajo = async () => {
     link: row.querySelector('[data-field="link"]').value.trim()
   })).filter(a => a.nombre);
 
-  await addDoc(collection(db, 'trabajos'), {
+  const datos = {
     titulo, extracto, resena, artResenado,
     linkArticulo: document.getElementById('fLinkArt').value.trim(),
     semestre: document.getElementById('fSemestre').value.trim(),
-    anio, autores,
-    autorEmail: currentUser.email,
-    createdAt: serverTimestamp()
-  });
+    anio, autores
+  };
+
+  if (editandoId) {
+    await updateDoc(doc(db, 'trabajos', editandoId), datos);
+  } else {
+    await addDoc(collection(db, 'trabajos'), {
+      ...datos,
+      autorEmail: currentUser.email,
+      createdAt: serverTimestamp()
+    });
+  }
 
   closeModal();
   await loadTrabajos();
@@ -451,7 +503,7 @@ window.confirmDeleteAction = async () => {
 };
 
 // ── INIT ──────────────────────────────────────────────────────
-loadTrabajos();
+// loadTrabajos se llama desde onAuthStateChanged
 </script>
 </body>
 </html>
