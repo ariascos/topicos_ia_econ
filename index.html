@@ -1,509 +1,1545 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Trabajos Finales · Tópicos en IA y Economía</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0d2318;--bg2:#112a1e;--bg3:#163324;
-  --border:rgba(126,184,212,0.15);--border2:rgba(126,184,212,0.25);
-  --accent:#7eb8d4;--accent2:#a8d4e8;
-  --text:#e8f0ec;--text-muted:#7a9e89;--text-dim:#4d7060;
-  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--serif:'Lora',serif;
-  --card-radius:10px;
-}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;-webkit-font-smoothing:antialiased}
-.site-header{position:sticky;top:0;z-index:100;background:rgba(13,35,24,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 2rem}
-.header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:1.25rem;height:76px}
-.header-title{flex:1;font-family:var(--serif);font-size:1rem;font-weight:600;color:var(--text);line-height:1.3}
-.header-title span{display:block;font-family:var(--mono);font-size:0.62rem;font-weight:400;color:var(--text-muted);letter-spacing:0.06em;text-transform:uppercase;margin-top:2px}
-.header-prof-link{color:var(--accent);text-decoration:none;transition:opacity 0.15s}
-.header-prof-link:hover{opacity:0.8;text-decoration:underline}
-.hdiv{width:1px;height:28px;background:var(--border)}
-.btn{font-family:var(--sans);font-size:0.78rem;font-weight:500;padding:0.42rem 0.95rem;border-radius:6px;cursor:pointer;border:none;transition:all 0.18s;white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem}
-.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
-.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
-.btn-primary{background:var(--accent);color:var(--bg);font-weight:600}
-.btn-primary:hover{background:var(--accent2)}
-.btn-danger{background:transparent;color:#e57373;border:1px solid rgba(229,115,115,0.3);font-size:0.72rem}
-.btn-danger:hover{background:rgba(229,115,115,0.1);border-color:#e57373}
-.user-chip{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.68rem;color:var(--text-muted)}
-.user-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
-.hero{padding:3.5rem 2rem 2.5rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;top:-60px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(126,184,212,0.06) 0%,transparent 70%);pointer-events:none}
-.hero-inner{max-width:1200px;margin:0 auto}
-.hero-label{font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem}
-.hero-title{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:700;line-height:1.15;color:var(--text);max-width:640px}
-.hero-title em{font-style:italic;color:var(--accent)}
-.hero-sub{margin-top:0.85rem;font-size:0.9rem;color:var(--text-muted);max-width:560px;line-height:1.6}
-.hero-meta{margin-top:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
-.hero-stat{font-family:var(--mono);font-size:0.72rem;color:var(--text-dim)}
-.hero-stat strong{color:var(--text-muted);font-weight:500}
-.tabs-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 2rem;position:sticky;top:76px;z-index:90}
-.tabs-inner{max-width:1200px;margin:0 auto;display:flex;gap:0;align-items:stretch}
-.tab{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.06em;padding:0.9rem 1.1rem;color:var(--text-muted);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all 0.18s;white-space:nowrap}
-.tab:hover{color:var(--text)}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.grid-section{max-width:1200px;margin:0 auto;padding:2.5rem 2rem 4rem}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:580px){.grid{grid-template-columns:1fr}}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--card-radius);overflow:hidden;display:flex;flex-direction:column;transition:transform 0.2s,border-color 0.2s,box-shadow 0.2s}
-.card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
-
-.card-body{padding:1.5rem;flex:1;display:flex;flex-direction:column;gap:0.6rem}
-.card-authors{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap}
-.author-chip{display:inline-flex;align-items:center;gap:0.3rem;font-family:var(--mono);font-size:0.62rem;color:var(--text-muted)}
-.author-link{color:var(--accent);opacity:0.7;transition:opacity 0.15s;display:inline-flex;align-items:center}
-.author-link:hover{opacity:1}
-.author-link svg{width:10px;height:10px}
-.author-sep{color:var(--text-dim);font-size:0.6rem}
-.card-title{font-family:var(--serif);font-size:1rem;font-weight:600;line-height:1.35;color:var(--text)}
-.card-excerpt{font-size:0.82rem;line-height:1.6;color:var(--text-muted);flex:1;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.card-footer{padding:0 1.25rem 1.25rem;display:flex;gap:0.65rem;align-items:center;flex-wrap:wrap}
-.card-btn-resena{font-family:var(--sans);font-size:0.75rem;font-weight:500;color:var(--accent);background:rgba(126,184,212,0.08);border:1px solid rgba(126,184,212,0.2);padding:0.38rem 0.85rem;border-radius:5px;cursor:pointer;transition:all 0.17s;text-decoration:none;display:inline-block}
-.card-btn-resena:hover{background:rgba(126,184,212,0.15);border-color:rgba(126,184,212,0.4)}
-.card-btn-art{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);background:transparent;border:1px solid var(--border);padding:0.38rem 0.75rem;border-radius:5px;cursor:pointer;transition:all 0.17s;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem}
-.card-btn-art:hover{color:var(--text-muted);border-color:var(--border2)}
-.card-btn-art svg{width:10px;height:10px}
-.card-admin{margin-left:auto}
-.year-block{margin-bottom:3rem}
-.year-divider{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem}
-.year-divider-num{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--text-dim)}
-.year-divider-line{flex:1;height:1px;background:var(--border)}
-.year-divider-count{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim)}
-.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim);font-family:var(--mono);font-size:0.8rem}
-.loading{text-align:center;padding:4rem;color:var(--text-dim);font-family:var(--mono);font-size:0.75rem;letter-spacing:0.1em}
-.site-footer{border-top:1px solid var(--border);padding:2rem;text-align:center}
-.site-footer p{font-family:var(--mono);font-size:0.65rem;color:var(--text-dim);letter-spacing:0.06em}
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;padding:1rem}
-.modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:2rem;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
-.modal h2{font-family:var(--serif);font-size:1.2rem;margin-bottom:1.5rem;color:var(--text)}
-.form-group{margin-bottom:1.1rem}
-.form-label{display:block;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem}
-.form-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.65rem 0.85rem;color:var(--text);font-family:var(--sans);font-size:0.85rem;outline:none;transition:border-color 0.15s}
-.form-input:focus{border-color:var(--accent)}
-.form-input::placeholder{color:var(--text-dim)}
-textarea.form-input{resize:vertical;min-height:100px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem}
-.author-entry{display:flex;gap:0.5rem;margin-bottom:0.5rem;align-items:center}
-.author-entry input{flex:1}
-.btn-add-author{font-family:var(--mono);font-size:0.65rem;color:var(--accent);background:transparent;border:1px dashed rgba(126,184,212,0.3);padding:0.4rem 0.8rem;border-radius:5px;cursor:pointer;width:100%;margin-top:0.25rem;transition:all 0.15s}
-.btn-add-author:hover{border-color:var(--accent);background:rgba(126,184,212,0.05)}
-.modal-footer{display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
-.btn-remove{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1rem;padding:0 0.25rem;transition:color 0.15s}
-.btn-remove:hover{color:#e57373}
-/* Confirm dialog */
-.confirm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;align-items:center;justify-content:center}
-.confirm-overlay.open{display:flex}
-.confirm-box{background:var(--bg2);border:1px solid rgba(229,115,115,0.3);border-radius:10px;padding:1.75rem;max-width:380px;width:90%;text-align:center}
-.confirm-box p{font-size:0.9rem;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6}
-.confirm-box strong{color:var(--text)}
-.confirm-actions{display:flex;gap:0.75rem;justify-content:center}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Laboratorio | iCCA Stage IV</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.0.1/chartjs-plugin-annotation.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    
+    :root {
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2234;
+      --border: #2d3a52;
+      --text-primary: #f0f4f8;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --hepatic: #f59e0b;
+      --hepatic-light: rgba(245, 158, 11, 0.15);
+      --renal: #ec4899;
+      --renal-light: rgba(236, 72, 153, 0.15);
+      --hematologic: #3b82f6;
+      --hematologic-light: rgba(59, 130, 246, 0.15);
+      
+      --normal: #10b981;
+      --normal-bg: rgba(16, 185, 129, 0.12);
+      --elevated: #f97316;
+      --critical: #ef4444;
+      --low: #fbbf24;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    
+    .container { max-width: 1600px; margin: 0 auto; padding: 24px; }
+    
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      margin-bottom: 24px;
+    }
+    
+    .header-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    
+    .header-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    
+    .header-title .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+    
+    .header-meta {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .meta-item { text-align: right; }
+    
+    .meta-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .meta-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--accent-cyan);
+    }
+    
+    .badge-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--normal);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .badge-new::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--normal);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    
+    .section { margin-bottom: 40px; }
+    
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+    
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    
+    .section-hepatic .section-icon { background: var(--hepatic-light); }
+    .section-renal .section-icon { background: var(--renal-light); }
+    .section-hematologic .section-icon { background: var(--hematologic-light); }
+    
+    .section-title { font-size: 1.25rem; font-weight: 700; }
+    
+    .section-hepatic .section-title { color: var(--hepatic); }
+    .section-renal .section-title { color: var(--renal); }
+    .section-hematologic .section-title { color: var(--hematologic); }
+    
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+    
+    .summary-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      border-top: 3px solid var(--border);
+    }
+    
+    .summary-card.normal { border-top-color: var(--normal); }
+    .summary-card.elevated { border-top-color: var(--elevated); }
+    .summary-card.critical { border-top-color: var(--critical); }
+    .summary-card.low { border-top-color: var(--low); }
+    
+    .summary-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+    
+    .summary-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    
+    .summary-card.normal .summary-value { color: var(--normal); }
+    .summary-card.elevated .summary-value { color: var(--elevated); }
+    .summary-card.critical .summary-value { color: var(--critical); }
+    .summary-card.low .summary-value { color: var(--low); }
+    
+    .summary-unit { font-size: 0.75rem; font-weight: 400; opacity: 0.7; }
+    .summary-ref { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+    
+    .summary-trend {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      margin-top: 6px;
+    }
+    
+    .trend-up { color: var(--critical); }
+    .trend-down { color: var(--normal); }
+    .trend-stable { color: var(--text-muted); }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .charts-grid .chart-card.full { grid-column: 1 / -1; }
+    }
+    
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .chart-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+    .chart-subtitle { font-size: 0.7rem; color: var(--text-muted); }
+    
+    .chart-legend { display: flex; gap: 12px; flex-wrap: wrap; }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+    
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .legend-box { width: 14px; height: 10px; border-radius: 2px; }
+    
+    .chart-container { position: relative; height: 280px; }
+    .chart-container.tall { height: 340px; }
+    
+    .annotation-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    
+    .annotation-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+    }
+    
+    .annotation-text {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    .table-section { margin-top: 40px; }
+    .table-title { font-size: 1.125rem; font-weight: 600; margin-bottom: 16px; }
+    
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow-x: auto;
+    }
+    
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    
+    .data-table th {
+      background: var(--bg-secondary);
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+    }
+    
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover { background: rgba(59, 130, 246, 0.05); }
+    
+    .date-col { color: var(--text-secondary); font-weight: 500; }
+    .cell-normal { color: var(--normal); }
+    .cell-elevated { color: var(--elevated); }
+    .cell-critical { color: var(--critical); }
+    .cell-low { color: var(--low); }
+    .cell-na { color: var(--text-muted); }
+    
+    .highlight-row { background: rgba(16, 185, 129, 0.08) !important; }
+    .highlight-row td:first-child::before { content: '● '; color: var(--normal); }
+    
+    .th-hepatic { background: var(--hepatic-light) !important; color: var(--hepatic) !important; }
+    .th-renal { background: var(--renal-light) !important; color: var(--renal) !important; }
+    .th-hematologic { background: var(--hematologic-light) !important; color: var(--hematologic) !important; }
+    
+    footer {
+      margin-top: 40px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    
+    .footer-text { font-size: 0.7rem; color: var(--text-muted); }
+    
+    @media (max-width: 768px) {
+      .header-content { flex-direction: column; align-items: flex-start; }
+      .header-meta { width: 100%; justify-content: flex-start; }
+      .summary-row { grid-template-columns: repeat(2, 1fr); }
+      .chart-container { height: 240px; }
+    }
+  </style>
 </head>
 <body>
-
-<header class="site-header">
-  <div class="header-inner">
-    <img src="data:image/png;base64,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" alt="Universidad de los Andes" style="height:60px;width:auto;flex-shrink:0;display:block"/>
-    <div class="hdiv"></div>
-    <div class="header-title">
-      Tópicos en Inteligencia Artificial y Economía
-      <span>Profesor <a href="https://www.alvaroriascos.com" target="_blank" rel="noopener" class="header-prof-link">Álvaro J. Riascos Villegas</a></span>
-      <span>Universidad de los Andes · Facultad de Economía</span>
-    </div>
-    <div id="authArea">
-      <button class="btn btn-ghost" onclick="signIn()">Iniciar sesión</button>
-    </div>
-    <button class="btn btn-primary" id="btnPublicar" style="display:none" onclick="openModal()">+ Publicar trabajo</button>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="hero-inner">
-    <p class="hero-label">Repositorio académico</p>
-    <h1 class="hero-title">Trabajos finales<br><em>de los estudiantes</em></h1>
-    <p class="hero-sub">Reseñas y artículos de investigación publicados por los grupos de cada semestre. Un archivo que crece con el tiempo.</p>
-    <div class="hero-meta">
-      <span class="hero-stat" id="statTrabajos"><strong>—</strong> trabajos</span>
-      <span class="hero-stat" id="statCohortes"><strong>—</strong> cohortes</span>
-    </div>
-  </div>
-</section>
-
-<nav class="tabs-bar">
-  <div class="tabs-inner" id="tabsContainer">
-    <button class="tab active" data-year="all" onclick="filterYear(this,'all')">Todos</button>
-  </div>
-</nav>
-
-<main class="grid-section" id="mainContent">
-  <div class="loading">Cargando trabajos…</div>
-</main>
-
-<!-- MODAL PUBLICAR -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <h2>Publicar trabajo</h2>
-    <div class="form-group">
-      <label class="form-label">Título del trabajo *</label>
-      <input class="form-input" id="fTitulo" placeholder="Título completo del trabajo"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Resumen / extracto *</label>
-      <textarea class="form-input" id="fExtracto" placeholder="Breve descripción (aparece en la tarjeta)"></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Reseña completa *</label>
-      <textarea class="form-input" id="fResena" style="min-height:140px" placeholder="Texto completo de la reseña del artículo académico"></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Artículo reseñado *</label>
-      <input class="form-input" id="fArtResenado" placeholder="Autor(es), Año — Título del artículo"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Link al artículo propio</label>
-      <input class="form-input" id="fLinkArt" placeholder="https://arxiv.org/… · SSRN · Google Drive · etc."/>
-      <p style="font-family:var(--mono);font-size:0.6rem;color:var(--text-dim);margin-top:0.35rem">Puede ser arXiv, SSRN, Google Drive u otro link público. Campo opcional.</p>
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Autores</label>
-      <div id="autoresContainer">
-        <div class="author-entry">
-          <input class="form-input" placeholder="Nombre del integrante" data-field="nombre"/>
-          <input class="form-input" placeholder="Link personal (opcional)" data-field="link" style="max-width:180px"/>
-          <button class="btn-remove" onclick="removeAuthor(this)">×</button>
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Dashboard de Laboratorio</h1>
+        <span class="subtitle">Colangiocarcinoma Intrahepático Stage IV — Régimen TOPAZ-1</span>
+      </div>
+      <div class="header-meta">
+        <span class="badge-new">Actualizado 14 Jul 2026</span>
+        <div class="meta-item">
+          <span class="meta-label">Última muestra</span>
+          <span class="meta-value">14/Jul/2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Total muestras</span>
+          <span class="meta-value">18</span>
         </div>
       </div>
-      <button class="btn-add-author" onclick="addAuthor()">+ Añadir integrante</button>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Año *</label>
-        <input class="form-input" id="fAnio" type="number" placeholder="2025" value="2025"/>
+  </header>
+
+  <div class="container">
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN 1: PERFIL HEPÁTICO -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section section-hepatic">
+      <div class="section-header">
+        <div class="section-icon">🫀</div>
+        <h2 class="section-title">Perfil Hepático</h2>
+        <span class="section-subtitle">Enzimas hepáticas, colestasis y función sintética</span>
       </div>
-      <div class="form-group">
-        <label class="form-label">Semestre</label>
-        <input class="form-input" id="fSemestre" placeholder="2025-I"/>
+      
+      <div class="summary-row">
+        <div class="summary-card critical">
+          <div class="summary-label">ALP (Fosfatasa Alcalina)</div>
+          <div class="summary-value">905.0 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 35–104 · 8.7× ULN</div>
+          <div class="summary-trend trend-up">↑ desde 762 (23-Jun) · nuevo máximo</div>
+        </div>
+        <div class="summary-card critical">
+          <div class="summary-label">GGT</div>
+          <div class="summary-value">2914 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 6–42 · 69× ULN</div>
+          <div class="summary-trend trend-up">↑ desde 2693 (23-Jun) · nuevo máximo</div>
+        </div>
+        <div class="summary-card elevated">
+          <div class="summary-label">AST (TGO)</div>
+          <div class="summary-value">58.3 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 0–32 · 1.8× ULN</div>
+          <div class="summary-trend trend-up">↑ desde 52.8 (23-Jun)</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">ALT (TGP)</div>
+          <div class="summary-value">11.3 <span class="summary-unit">U/L</span></div>
+          <div class="summary-ref">Ref: 0–33</div>
+          <div class="summary-trend trend-down">↓ desde 17.0 (23-Jun) · normal</div>
+        </div>
+        <div class="summary-card critical">
+          <div class="summary-label">Bilirrubina Total</div>
+          <div class="summary-value">0.950 <span class="summary-unit">mg/dL</span></div>
+          <div class="summary-ref">Ref: 0.14–0.9</div>
+          <div class="summary-trend trend-up">↑ desde 0.625 (23-Jun) · primer valor fuera de rango</div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card full">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Marcadores de Colestasis (ALP + GGT)</div>
+              <div class="chart-subtitle">Patrón de colestasis disociada — elevación enzimática con bilirrubina normal</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>ALP (U/L)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>GGT (U/L)</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Bilirrubina ×100</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Rango normal</div>
+            </div>
+          </div>
+          <div class="chart-container tall">
+            <canvas id="cholestasisChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Interpretación</div>
+            <div class="annotation-text">
+              <strong>Colestasis disociada:</strong> ALP y GGT marcadamente elevados; bilirrubina total supera por primera vez el límite superior normal.
+              GGT con nuevo máximo de la serie a 2914 U/L (14-Jul, 69× ULN), desde 2693 el 23-Jun. ALP también en nuevo máximo, 905.0 U/L (14-Jul, 8.7× ULN), tras la meseta previa en 762–773. Bilirrubina total 0.950 mg/dL (14-Jul) — primer valor fuera de rango (ref &le;0.9) tras meses estable; bilirrubina directa también en ascenso marcado a 0.591 (ref &le;0.3). AST con nuevo repunte a 58.3 (1.8× ULN). El patrón conjunto (ALP/GGT en nuevo máximo + bilirrubina cruzando el límite superior) sugiere progresión de la infiltración hepatobiliar; a correlacionar con imagen y con el equipo tratante.
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Transaminasas (AST / ALT)</div>
+              <div class="chart-subtitle">Marcadores de daño hepatocelular</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span>AST</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#06b6d4"></span>ALT</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="transaminasesChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Bilirrubinas</div>
+              <div class="chart-subtitle">Total y directa</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span>Total</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span>Directa</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="bilirubinChart"></canvas>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="publicarTrabajo()">Publicar</button>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN 2: FUNCIÓN RENAL -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section section-renal">
+      <div class="section-header">
+        <div class="section-icon">🫘</div>
+        <h2 class="section-title">Función Renal</h2>
+        <span class="section-subtitle">Monitoreo de nefrotoxicidad por cisplatino</span>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-card critical">
+          <div class="summary-label">Creatinina</div>
+          <div class="summary-value">1.05 <span class="summary-unit">mg/dL</span></div>
+          <div class="summary-ref">Ref: 0.51–0.95</div>
+          <div class="summary-trend trend-up">↑ desde 0.98 (23-Jun) · fuera de rango</div>
+        </div>
+        <div class="summary-card elevated">
+          <div class="summary-label">BUN</div>
+          <div class="summary-value">20.1 <span class="summary-unit">mg/dL</span></div>
+          <div class="summary-ref">Ref: 6–20 · último 02-Jun (sin dato 16-Jun, 23-Jun ni 14-Jul)</div>
+          <div class="summary-trend trend-stable">= límite superior</div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Creatinina Sérica</div>
+              <div class="chart-subtitle">Función glomerular — vigilancia por cisplatino</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#ec4899"></span>Creatinina</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (0.51–0.95)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="creatinineChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Nota</div>
+            <div class="annotation-text">
+              Función renal preservada durante el tratamiento activo, con deterioro leve reciente. Creatinina en ascenso sostenido a 1.05 mg/dL (14-Jul), ahora claramente por encima del límite superior (0.95) tras el borde previo de 0.98 (23-Jun). Sin patrón catastrófico de nefrotoxicidad por cisplatino, pero la tendencia ascendente sostenida amerita seguimiento. BUN no disponible en el control del 14-Jul.
+            </div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Nitrógeno Ureico (BUN)</div>
+              <div class="chart-subtitle">Marcador de función renal / catabolismo proteico</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span>BUN</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (6–20)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="bunChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Nota</div>
+            <div class="annotation-text">
+              BUN en rango normal o límite superior en todos los timepoints disponibles. Pico 22.1 mg/dL (30-Mar) y 20.7 mg/dL (19-Ene); valor actual 20.1 mg/dL (02-Jun). Sin deterioro renal progresivo.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-<!-- CONFIRM DELETE -->
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <p id="confirmMsg">¿Seguro que quieres eliminar este trabajo? Esta acción no se puede deshacer.</p>
-    <div class="confirm-actions">
-      <button class="btn btn-ghost" onclick="closeConfirm()">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmDeleteAction()">Eliminar</button>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECCIÓN 3: PANEL HEMATOLÓGICO -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="section section-hematologic">
+      <div class="section-header">
+        <div class="section-icon">🩸</div>
+        <h2 class="section-title">Panel Hematológico</h2>
+        <span class="section-subtitle">Hemograma, series celulares y marcadores pronósticos</span>
+      </div>
+      
+      <div class="summary-row">
+        <div class="summary-card normal">
+          <div class="summary-label">NLR (Neutrófilo/Linfocito)</div>
+          <div class="summary-value">1.5</div>
+          <div class="summary-ref">Favorable: &lt;3</div>
+          <div class="summary-trend trend-stable">= estable &lt;3 en todos los TPs</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Hemoglobina</div>
+          <div class="summary-value">11.9 <span class="summary-unit">g/dL</span></div>
+          <div class="summary-ref">Ref: 11.2–15.7</div>
+          <div class="summary-trend trend-up">↑ desde 11.3 (23-Jun) · en rango</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Leucocitos (WBC)</div>
+          <div class="summary-value">6.51 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 3.98–10.04</div>
+          <div class="summary-trend trend-down">↓ desde 9.26 (23-Jun)</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Neutrófilos</div>
+          <div class="summary-value">3.11 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 1.56–6.13</div>
+          <div class="summary-trend trend-down">↓ desde 3.97 (23-Jun)</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Linfocitos</div>
+          <div class="summary-value">2.07 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 1.18–3.74</div>
+          <div class="summary-trend trend-down">↓ desde 2.86 (23-Jun)</div>
+        </div>
+        <div class="summary-card normal">
+          <div class="summary-label">Plaquetas</div>
+          <div class="summary-value">264 <span class="summary-unit">×10³/µL</span></div>
+          <div class="summary-ref">Ref: 182–369</div>
+          <div class="summary-trend trend-up">↑ desde 160 (23-Jun) · de vuelta en rango</div>
+        </div>
+      </div>
+      
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Índice Neutrófilos/Linfocitos (NLR)</div>
+              <div class="chart-subtitle">Marcador pronóstico — favorable si &lt;3</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>NLR</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Favorable (&lt;3)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="nlrChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Interpretación NLR</div>
+            <div class="annotation-text">
+              NLR mantenido &lt;3 (favorable para eLTS) en todos los timepoints excepto el 7-Ene (7.91, post-procedimiento). 
+              El valor de 0.43 del 30-Mar fue artefactual por neutropenia. NLR actual 1.5 (14-Jul): patrón linfocítico-dominante favorable sostenido, sin cambio clínicamente relevante desde 1.39 (23-Jun), durante mantenimiento con durvalumab.
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Hemoglobina</div>
+              <div class="chart-subtitle">Serie roja — tolerancia a quimioterapia</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Hemoglobina</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (11.2–15.7)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="hemoglobinChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Anemia</div>
+            <div class="annotation-text">
+              Hemoglobina por debajo del rango desde 24-Feb, con nadir de 9.3 g/dL (02-Jun). Recuperación progresiva sostenida: 10.9 (16-Jun) → 11.3 (23-Jun) → 11.9 (14-Jul), consolidando la vuelta al rango normal. 
+              Mejoría neta respecto al nadir; serie roja estable bajo mantenimiento con durvalumab.
+            </div>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Leucocitos Totales (WBC)</div>
+              <div class="chart-subtitle">Serie blanca — recuperación medular</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6"></span>WBC</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (3.98–10.04)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="wbcChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Diferencial: Neutrófilos y Linfocitos</div>
+              <div class="chart-subtitle">Poblaciones celulares absolutas</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#f97316"></span>Neutrófilos</div>
+              <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Linfocitos</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(249,115,22,0.1);border:1px dashed #f97316"></span>Neut (1.56–6.13)</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(59,130,246,0.1);border:1px dashed #3b82f6"></span>Linf (1.18–3.74)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="diffChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card full">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Plaquetas</div>
+              <div class="chart-subtitle">Serie plaquetaria — vigilancia de trombocitosis / trombocitopenia</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><span class="legend-dot" style="background:#a855f7"></span>Plaquetas</div>
+              <div class="legend-item"><span class="legend-box" style="background:rgba(16,185,129,0.15);border:1px dashed #10b981"></span>Normal (182–369)</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="plateletChart"></canvas>
+          </div>
+          <div class="annotation-box">
+            <div class="annotation-title">📌 Plaquetas</div>
+            <div class="annotation-text">
+              Serie completa de los 18 timepoints. Recuento mayormente dentro de rango con episodios de <strong>trombocitosis</strong> reactiva: 400 (09-Feb), 432 (24-Mar), 412 (14-Abr) y el pico de 453 (26-May). 
+              Caída a 160 (23-Jun) — primer valor por debajo del rango — seguida de recuperación a 264 (14-Jul), de vuelta dentro del rango normal (182–369). Patrón fluctuante consistente con variación reactiva más que mielosupresión sostenida.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TABLA DE DATOS COMPLETA -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="table-section">
+      <h2 class="table-title">Tabla de Datos Completa</h2>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th class="th-hematologic">NLR</th>
+              <th class="th-hematologic">Hgb</th>
+              <th class="th-hematologic">WBC</th>
+              <th class="th-hematologic">Neut</th>
+              <th class="th-hematologic">Linf</th>
+              <th class="th-hematologic">Plt</th>
+              <th class="th-hepatic">AST</th>
+              <th class="th-hepatic">ALT</th>
+              <th class="th-hepatic">ALP</th>
+              <th class="th-hepatic">GGT</th>
+              <th class="th-hepatic">Bili T</th>
+              <th class="th-hepatic">Bili D</th>
+              <th class="th-renal">Creat</th>
+              <th class="th-renal">BUN</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <footer>
+      <p class="footer-text">
+        Dashboard generado para el equipo médico tratante · Datos de Fundación Valle del Lili · 
+        Última actualización: 14 de julio de 2026
+      </p>
+    </footer>
   </div>
-</div>
 
-<footer class="site-footer">
-  <p>Tópicos en Inteligencia Artificial y Economía &nbsp;·&nbsp; Universidad de los Andes &nbsp;·&nbsp; Facultad de Economía</p>
-</footer>
+  <script>
+    // ═══════════════════════════════════════════════════════════════
+    // DATA
+    // ═══════════════════════════════════════════════════════════════
+    const labData = [
+      { date: '06-Ene', nlr: 1.92, hgb: 13.20, wbc: 6.78, neut: 4.01, lymph: 2.09, plt: 301, ast: null, alt: null, alp: null, ggt: null, biliT: null, biliD: null, creat: null, bun: 18.6 },
+      { date: '07-Ene', nlr: 7.91, hgb: 9.80, wbc: 6.82, neut: 5.85, lymph: 0.74, plt: 224, ast: 34.7, alt: 21.5, alp: 360.7, ggt: 527, biliT: 0.44, biliD: 0.25, creat: null, bun: 14.0 },
+      { date: '19-Ene', nlr: 2.48, hgb: 8.40, wbc: 7.38, neut: 4.47, lymph: 1.80, plt: 175, ast: 68.4, alt: 46.6, alp: 883.0, ggt: 1893, biliT: 0.38, biliD: 0.23, creat: null, bun: 20.7 },
+      { date: '28-Ene', nlr: 1.27, hgb: 9.70, wbc: 6.92, neut: 3.21, lymph: 2.52, plt: 315, ast: 64.8, alt: 39.2, alp: 957.7, ggt: 1996, biliT: 0.30, biliD: 0.20, creat: null, bun: 17.0 },
+      { date: '09-Feb', nlr: 1.22, hgb: 11.50, wbc: 6.72, neut: 3.01, lymph: 2.46, plt: 400, ast: null, alt: null, alp: null, ggt: null, biliT: null, biliD: null, creat: null, bun: null },
+      { date: '24-Feb', nlr: 1.42, hgb: 11.20, wbc: 5.46, neut: 2.69, lymph: 1.89, plt: 191, ast: 54.7, alt: null, alp: 914.0, ggt: 2137, biliT: 0.34, biliD: 0.20, creat: null, bun: null },
+      { date: '02-Mar', nlr: null, hgb: null, wbc: null, neut: null, lymph: null, plt: 299, ast: 33.7, alt: 14.7, alp: 794.8, ggt: 1557, biliT: 0.39, biliD: 0.24, creat: 0.91, bun: 18.4 },
+      { date: '04-Mar', nlr: 2.44, hgb: 11.30, wbc: 7.04, neut: 4.70, lymph: 1.93, plt: 323, ast: 96.7, alt: 35.4, alp: 683.0, ggt: 1585, biliT: 0.45, biliD: 0.24, creat: 0.88, bun: null },
+      { date: '24-Mar', nlr: 1.22, hgb: 13.00, wbc: 5.42, neut: 2.43, lymph: 2.00, plt: 432, ast: null, alt: null, alp: null, ggt: null, biliT: null, biliD: null, creat: null, bun: 16.2 },
+      { date: '30-Mar', nlr: 0.43, hgb: 12.90, wbc: 3.12, neut: 0.82, lymph: 1.91, plt: 245, ast: 46.8, alt: 28.0, alp: 803.9, ggt: 2226, biliT: 0.45, biliD: 0.26, creat: 0.92, bun: 22.1 },
+      { date: '14-Abr', nlr: 2.35, hgb: 12.90, wbc: 8.52, neut: 5.09, lymph: 2.17, plt: 412, ast: 37.5, alt: 15.6, alp: 750.9, ggt: 1986, biliT: 0.44, biliD: 0.27, creat: 0.85, bun: null },
+      { date: '21-Abr', nlr: 1.55, hgb: 12.50, wbc: 7.26, neut: 3.67, lymph: 2.37, plt: 267, ast: 51.9, alt: 29.9, alp: 756.0, ggt: 2346, biliT: 0.30, biliD: 0.19, creat: 0.83, bun: null },
+      { date: '12-May', nlr: 1.11, hgb: 11.20, wbc: 6.23, neut: 2.75, lymph: 2.47, plt: 250, ast: 46.9, alt: 22.0, alp: 686.0, ggt: 2442, biliT: 0.46, biliD: 0.29, creat: 0.85, bun: null },
+      { date: '26-May', nlr: 1.48, hgb: 10.30, wbc: 7.45, neut: 3.71, lymph: 2.51, plt: 453, ast: 46.8, alt: 14.9, alp: 710.0, ggt: 2388, biliT: 0.479, biliD: 0.295, creat: 0.89, bun: null },
+      { date: '02-Jun', nlr: 1.20, hgb: 9.30, wbc: 9.40, neut: 3.67, lymph: 3.07, plt: 182, ast: 42.2, alt: 16.8, alp: 685.0, ggt: 2477, biliT: 0.436, biliD: 0.288, creat: 0.86, bun: 20.1 },
+      { date: '16-Jun', nlr: 1.37, hgb: 10.90, wbc: 7.22, neut: 3.39, lymph: 2.48, plt: 366, ast: 42.1, alt: 12.2, alp: 773.0, ggt: 2494, biliT: 0.591, biliD: 0.358, creat: 0.96, bun: null },
+      { date: '23-Jun', nlr: 1.39, hgb: 11.30, wbc: 9.26, neut: 3.97, lymph: 2.86, plt: 160, ast: 52.8, alt: 17.0, alp: 762.0, ggt: 2693, biliT: 0.625, biliD: 0.398, creat: 0.98, bun: null },
+      { date: '14-Jul', nlr: 1.5, hgb: 11.90, wbc: 6.51, neut: 3.11, lymph: 2.07, plt: 264, ast: 58.3, alt: 11.3, alp: 905.0, ggt: 2914, biliT: 0.950, biliD: 0.591, creat: 1.05, bun: null, isNew: true }
+    ];
 
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+    // Reference ranges
+    const REFS = {
+      nlr: { min: 0, max: 3, label: 'Favorable' },
+      hgb: { min: 11.2, max: 15.7, label: 'Normal' },
+      wbc: { min: 3.98, max: 10.04, label: 'Normal' },
+      neut: { min: 1.56, max: 6.13, label: 'Normal' },
+      lymph: { min: 1.18, max: 3.74, label: 'Normal' },
+      plt: { min: 182, max: 369, label: 'Normal' },
+      ast: { min: 0, max: 32, label: 'Normal' },
+      alt: { min: 0, max: 33, label: 'Normal' },
+      alp: { min: 35, max: 104, label: 'Normal' },
+      ggt: { min: 6, max: 42, label: 'Normal' },
+      biliT: { min: 0.14, max: 0.9, label: 'Normal' },
+      biliD: { min: 0.09, max: 0.3, label: 'Normal' },
+      creat: { min: 0.51, max: 0.95, label: 'Normal' },
+      bun: { min: 6, max: 20, label: 'Normal' }
+    };
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBYm26usL3m-CIyguEkZwg6PJL0nDhnUKM",
-  authDomain: "topicos-ia-econ.firebaseapp.com",
-  projectId: "topicos-ia-econ",
-  storageBucket: "topicos-ia-econ.firebasestorage.app",
-  messagingSenderId: "125672245963",
-  appId: "1:125672245963:web:87a9fda8ebb47b016ba94e"
-};
+    // Helpers
+    const withValue = (arr, key) => arr.filter(d => d[key] !== null);
+    const withAny = (arr, keys) => arr.filter(d => keys.some(k => d[k] !== null));
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({ hd: 'uniandes.edu.co' });
+    // Chart defaults
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = '#2d3a52';
+    Chart.defaults.font.family = "'DM Sans', sans-serif";
+    
+    const gridColor = 'rgba(110, 130, 170, 0.1)';
+    const normalBg = 'rgba(16, 185, 129, 0.12)';
+    const normalBorder = 'rgba(16, 185, 129, 0.4)';
 
-const ADMIN_EMAIL = 'ariascos@uniandes.edu.co';
-
-let currentUser = null;
-let isAdmin = false;
-let allTrabajos = [];
-let pendingDeleteId = null;
-let editandoId = null;
-
-// ── AUTH ──────────────────────────────────────────────────────
-window.signIn = async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    const email = result.user.email;
-    if (!email.endsWith('@uniandes.edu.co')) {
-      await signOut(auth);
-      alert('Solo se permiten cuentas @uniandes.edu.co');
+    // Normal range annotation helper
+    function normalRangeBox(ref, label = true) {
+      return {
+        type: 'box',
+        yMin: ref.min,
+        yMax: ref.max,
+        backgroundColor: normalBg,
+        borderColor: normalBorder,
+        borderWidth: 1,
+        borderDash: [4, 4],
+        label: label ? {
+          display: true,
+          content: `${ref.label} (${ref.min}–${ref.max})`,
+          position: { x: 'end', y: 'start' },
+          font: { size: 9, weight: 500 },
+          color: '#10b981',
+          backgroundColor: 'transparent',
+          padding: 2
+        } : undefined
+      };
     }
-  } catch(e) { console.error(e); }
-};
 
-window.signOutUser = async () => {
-  await signOut(auth);
-};
+    // Upper limit line annotation
+    function upperLimitLine(value, color = '#ef4444', label = 'ULN') {
+      return {
+        type: 'line',
+        yMin: value,
+        yMax: value,
+        borderColor: color,
+        borderWidth: 1,
+        borderDash: [5, 5],
+        label: {
+          display: true,
+          content: `${label} = ${value}`,
+          position: 'start',
+          font: { size: 9 },
+          backgroundColor: color,
+          color: '#fff',
+          padding: { x: 4, y: 2 }
+        }
+      };
+    }
 
-onAuthStateChanged(auth, user => {
-  currentUser = user;
-  isAdmin = user && user.email === ADMIN_EMAIL;
-  renderAuth();
-  loadTrabajos();
-});
-
-function renderAuth() {
-  const area = document.getElementById('authArea');
-  const btnPublicar = document.getElementById('btnPublicar');
-  if (currentUser) {
-    const img = currentUser.photoURL ? `<img src="${currentUser.photoURL}" class="user-avatar"/>` : '';
-    const name = currentUser.displayName || currentUser.email.split('@')[0];
-    const adminBadge = isAdmin ? `<span style="font-family:var(--mono);font-size:0.58rem;color:var(--accent);background:rgba(126,184,212,0.1);border:1px solid rgba(126,184,212,0.25);padding:0.1rem 0.4rem;border-radius:3px;margin-left:0.3rem">admin</span>` : '';
-    area.innerHTML = `<span class="user-chip">${img} ${name}${adminBadge}</span>
-      <button class="btn btn-ghost" style="margin-left:0.5rem" onclick="window.signOutUser()">Salir</button>`;
-    btnPublicar.style.display = 'inline-flex';
-  } else {
-    area.innerHTML = `<button class="btn btn-ghost" onclick="window.signIn()">Iniciar sesión</button>`;
-    btnPublicar.style.display = 'none';
-  }
-}
-
-// ── FIRESTORE ─────────────────────────────────────────────────
-async function loadTrabajos() {
-  const q = query(collection(db, 'trabajos'), orderBy('anio', 'desc'), orderBy('createdAt', 'desc'));
-  const snap = await getDocs(q);
-  allTrabajos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  renderTrabajos();
-  renderTabs();
-  renderStats();
-}
-
-function renderStats() {
-  const years = [...new Set(allTrabajos.map(t => t.anio))];
-  document.getElementById('statTrabajos').innerHTML = `<strong>${allTrabajos.length}</strong> trabajos`;
-  document.getElementById('statCohortes').innerHTML = `<strong>${years.length}</strong> cohortes`;
-}
-
-function renderTabs() {
-  const years = [...new Set(allTrabajos.map(t => t.anio))].sort((a,b) => b-a);
-  const container = document.getElementById('tabsContainer');
-  container.innerHTML = `<button class="tab active" data-year="all" onclick="filterYear(this,'all')">Todos</button>`;
-  years.forEach(y => {
-    const btn = document.createElement('button');
-    btn.className = 'tab';
-    btn.dataset.year = y;
-    btn.textContent = y;
-    btn.onclick = () => filterYear(btn, y);
-    container.appendChild(btn);
-  });
-}
-
-window.filterYear = (el, year) => {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  renderTrabajos(year === 'all' ? null : year);
-};
-
-function renderTrabajos(filterYear = null) {
-  const main = document.getElementById('mainContent');
-  const trabajos = filterYear ? allTrabajos.filter(t => String(t.anio) === String(filterYear)) : allTrabajos;
-
-  if (trabajos.length === 0) {
-    main.innerHTML = '<div class="empty-state">No hay trabajos publicados aún.</div>';
-    return;
-  }
-
-  const byYear = {};
-  trabajos.forEach(t => {
-    if (!byYear[t.anio]) byYear[t.anio] = [];
-    byYear[t.anio].push(t);
-  });
-
-  main.innerHTML = Object.keys(byYear).sort((a,b) => b-a).map(year => `
-    <div class="year-block">
-      <div class="year-divider">
-        <span class="year-divider-num">${year}</span>
-        <div class="year-divider-line"></div>
-        <span class="year-divider-count">${byYear[year].length} trabajo${byYear[year].length !== 1 ? 's' : ''}</span>
-        ${isAdmin ? `<button class="btn btn-danger" onclick="confirmDeleteYear('${year}')">Eliminar cohorte ${year}</button>` : ''}
-      </div>
-      <div class="grid">
-        ${byYear[year].map(t => renderCard(t)).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderCard(t) {
-  const autores = (t.autores || []).map(a => `
-    <span class="author-chip">
-      ${a.nombre}
-      ${a.link ? `<a class="author-link" href="${a.link}" target="_blank" rel="noopener" title="Perfil">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-      </a>` : ''}
-    </span>
-  `).join('<span class="author-sep">·</span>');
-
-  const img = t.imagen
-    ? `<img class="card-img" src="${t.imagen}" alt="${t.titulo}" onerror="this.parentElement.innerHTML='<div class=\'card-img-placeholder\'><svg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' fill=\'none\'><rect x=\'8\' y=\'14\' width=\'44\' height=\'32\' rx=\'3\' stroke=\'#7eb8d4\' stroke-width=\'2\'/></svg></div>'"/>`
-    : `<div class="card-img-placeholder"><svg width="60" height="60" viewBox="0 0 60 60" fill="none"><rect x="8" y="14" width="44" height="32" rx="3" stroke="#7eb8d4" stroke-width="2"/><line x1="8" y1="22" x2="52" y2="22" stroke="#7eb8d4" stroke-width="1.5"/><rect x="14" y="28" width="12" height="8" rx="1" fill="#7eb8d4" opacity=".3"/></svg></div>`;
-
-  return `
-    <div class="card">
-      ${img}
-      <div class="card-body">
-        <div class="card-authors">${autores}</div>
-        <h2 class="card-title">${t.titulo}</h2>
-        <p class="card-excerpt">${t.extracto || ''}</p>
-      </div>
-      <div class="card-footer">
-        <a href="proyecto.html?id=${t.id}" class="card-btn-resena">Leer reseña →</a>
-        ${t.linkArticulo ? `<a href="${t.linkArticulo}" target="_blank" class="card-btn-art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Ver artículo</a>` : ''}
-        ${(isAdmin || (currentUser && currentUser.email === t.autorEmail)) ? `<button class="card-btn-art" onclick="openModalEditar('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Editar</button>` : ''}
-        ${isAdmin ? `<button class="btn btn-danger card-admin" onclick="confirmDeleteTrabajo('${t.id}','${t.titulo.replace(/'/g,"\'")}')">Eliminar</button>` : ''}
-      </div>
-    </div>
-  `;
-}
-
-// ── PUBLICAR ──────────────────────────────────────────────────
-window.openModal = () => {
-  editandoId = null;
-  document.querySelector('.modal h2').textContent = 'Publicar trabajo';
-  document.querySelector('.modal-footer .btn-primary').textContent = 'Publicar';
-  // reset form
-  ['fTitulo','fExtracto','fResena','fArtResenado','fLinkArt','fSemestre'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('fAnio').value = new Date().getFullYear();
-  document.getElementById('autoresContainer').innerHTML = `<div class="author-entry">
-    <input class="form-input" placeholder="Nombre del integrante" data-field="nombre"/>
-    <input class="form-input" placeholder="Link personal (opcional)" data-field="link" style="max-width:180px"/>
-    <button class="btn-remove" onclick="removeAuthor(this)">×</button>
-  </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
-};
-
-window.openModalEditar = (id) => {
-  const t = allTrabajos.find(t => t.id === id);
-  if (!t) return;
-  editandoId = id;
-  document.querySelector('.modal h2').textContent = 'Editar trabajo';
-  document.querySelector('.modal-footer .btn-primary').textContent = 'Guardar cambios';
-  document.getElementById('fTitulo').value = t.titulo || '';
-  document.getElementById('fExtracto').value = t.extracto || '';
-  document.getElementById('fResena').value = t.resena || '';
-  document.getElementById('fArtResenado').value = t.artResenado || '';
-  document.getElementById('fLinkArt').value = t.linkArticulo || '';
-  document.getElementById('fAnio').value = t.anio || new Date().getFullYear();
-  document.getElementById('fSemestre').value = t.semestre || '';
-  // fill authors
-  const container = document.getElementById('autoresContainer');
-  container.innerHTML = '';
-  (t.autores || [{ nombre: '', link: '' }]).forEach(a => {
-    const div = document.createElement('div');
-    div.className = 'author-entry';
-    div.innerHTML = `<input class="form-input" placeholder="Nombre del integrante" data-field="nombre" value="${a.nombre || ''}"/>
-      <input class="form-input" placeholder="Link personal (opcional)" data-field="link" style="max-width:180px" value="${a.link || ''}"/>
-      <button class="btn-remove" onclick="removeAuthor(this)">×</button>`;
-    container.appendChild(div);
-  });
-  document.getElementById('modalOverlay').classList.add('open');
-};
-
-window.closeModal = () => { document.getElementById('modalOverlay').classList.remove('open'); editandoId = null; };
-
-window.addAuthor = () => {
-  const container = document.getElementById('autoresContainer');
-  const div = document.createElement('div');
-  div.className = 'author-entry';
-  div.innerHTML = `<input class="form-input" placeholder="Nombre del integrante" data-field="nombre"/>
-    <input class="form-input" placeholder="Link personal (opcional)" data-field="link" style="max-width:180px"/>
-    <button class="btn-remove" onclick="removeAuthor(this)">×</button>`;
-  container.appendChild(div);
-};
-
-window.removeAuthor = (btn) => btn.parentElement.remove();
-
-window.publicarTrabajo = async () => {
-  if (!currentUser) return alert('Debes iniciar sesión primero.');
-  const titulo = document.getElementById('fTitulo').value.trim();
-  const extracto = document.getElementById('fExtracto').value.trim();
-  const resena = document.getElementById('fResena').value.trim();
-  const artResenado = document.getElementById('fArtResenado').value.trim();
-  const anio = parseInt(document.getElementById('fAnio').value) || new Date().getFullYear();
-  if (!titulo || !extracto || !resena) return alert('Completa los campos obligatorios (*)');
-
-  const autores = [...document.querySelectorAll('#autoresContainer .author-entry')].map(row => ({
-    nombre: row.querySelector('[data-field="nombre"]').value.trim(),
-    link: row.querySelector('[data-field="link"]').value.trim()
-  })).filter(a => a.nombre);
-
-  const datos = {
-    titulo, extracto, resena, artResenado,
-    linkArticulo: document.getElementById('fLinkArt').value.trim(),
-    semestre: document.getElementById('fSemestre').value.trim(),
-    anio, autores
-  };
-
-  if (editandoId) {
-    await updateDoc(doc(db, 'trabajos', editandoId), datos);
-  } else {
-    await addDoc(collection(db, 'trabajos'), {
-      ...datos,
-      autorEmail: currentUser.email,
-      createdAt: serverTimestamp()
+    // ═══════════════════════════════════════════════════════════════
+    // HEPATIC CHARTS
+    // ═══════════════════════════════════════════════════════════════
+    
+    // Cholestasis Chart
+    const cholestasisData = withAny(labData, ['alp', 'ggt', 'biliT']);
+    new Chart(document.getElementById('cholestasisChart'), {
+      type: 'line',
+      data: {
+        labels: cholestasisData.map(d => d.date),
+        datasets: [
+          {
+            label: 'ALP',
+            data: cholestasisData.map(d => d.alp),
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: cholestasisData.map(d => d.isNew ? '#10b981' : '#f59e0b'),
+            pointBorderWidth: cholestasisData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          },
+          {
+            label: 'GGT',
+            data: cholestasisData.map(d => d.ggt),
+            borderColor: '#8b5cf6',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: '#8b5cf6',
+            tension: 0.3
+          },
+          {
+            label: 'Bili×100',
+            data: cholestasisData.map(d => d.biliT ? d.biliT * 100 : null),
+            borderColor: '#10b981',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: cholestasisData.map(d => d.isNew ? '#34d399' : '#10b981'),
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              alpNormal: {
+                type: 'box',
+                yMin: REFS.alp.min,
+                yMax: REFS.alp.max,
+                backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                borderColor: 'rgba(245, 158, 11, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'ALP Normal (35–104)',
+                  position: { x: 'start', y: 'center' },
+                  font: { size: 9 },
+                  color: '#f59e0b'
+                }
+              },
+              biliNormal: {
+                type: 'box',
+                yMin: REFS.biliT.min * 100,
+                yMax: REFS.biliT.max * 100,
+                backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Bili Normal (14–90)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 9 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 3000, grid: { color: gridColor }, title: { display: true, text: 'U/L (ALP, GGT) · mg/dL×100 (Bili)', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
     });
-  }
+    
+    // Transaminases Chart
+    const transData = withAny(labData, ['ast', 'alt']);
+    new Chart(document.getElementById('transaminasesChart'), {
+      type: 'line',
+      data: {
+        labels: transData.map(d => d.date),
+        datasets: [
+          {
+            label: 'AST',
+            data: transData.map(d => d.ast),
+            borderColor: '#f97316',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: transData.map(d => d.isNew ? '#10b981' : '#f97316'),
+            pointBorderWidth: transData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          },
+          {
+            label: 'ALT',
+            data: transData.map(d => d.alt),
+            borderColor: '#06b6d4',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: transData.map(d => d.isNew ? '#10b981' : '#06b6d4'),
+            pointBorderWidth: transData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: 0,
+                yMax: 33,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (0–32/33)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 9 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 120, grid: { color: gridColor }, title: { display: true, text: 'U/L', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Bilirubin Chart
+    const biliData = withAny(labData, ['biliT']);
+    new Chart(document.getElementById('bilirubinChart'), {
+      type: 'line',
+      data: {
+        labels: biliData.map(d => d.date),
+        datasets: [
+          {
+            label: 'Total',
+            data: biliData.map(d => d.biliT),
+            borderColor: '#fbbf24',
+            backgroundColor: 'rgba(251, 191, 36, 0.1)',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: biliData.map(d => d.isNew ? '#10b981' : '#fbbf24'),
+            pointBorderWidth: biliData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Directa',
+            data: biliData.map(d => d.biliD),
+            borderColor: '#f59e0b',
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: biliData.map(d => d.isNew ? '#10b981' : '#f59e0b'),
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalTotal: {
+                type: 'box',
+                yMin: REFS.biliT.min,
+                yMax: REFS.biliT.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal Total (0.14–0.9)',
+                  position: { x: 'end', y: 'end' },
+                  font: { size: 9 },
+                  color: '#10b981'
+                }
+              },
+              normalDirecta: {
+                type: 'box',
+                yMin: REFS.biliD.min,
+                yMax: REFS.biliD.max,
+                backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                borderColor: 'rgba(245, 158, 11, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal Directa (0.09–0.3)',
+                  position: { x: 'start', y: 'center' },
+                  font: { size: 9 },
+                  color: '#f59e0b'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 1.2, grid: { color: gridColor }, title: { display: true, text: 'mg/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
 
-  closeModal();
-  await loadTrabajos();
-};
+    // ═══════════════════════════════════════════════════════════════
+    // RENAL CHART
+    // ═══════════════════════════════════════════════════════════════
+    const renalData = withValue(labData, 'creat');
+    new Chart(document.getElementById('creatinineChart'), {
+      type: 'line',
+      data: {
+        labels: renalData.map(d => d.date),
+        datasets: [{
+          label: 'Creatinina',
+          data: renalData.map(d => d.creat),
+          borderColor: '#ec4899',
+          backgroundColor: 'rgba(236, 72, 153, 0.15)',
+          borderWidth: 2.5,
+          pointRadius: 6,
+          pointBackgroundColor: renalData.map(d => d.isNew ? '#10b981' : '#ec4899'),
+          pointBorderWidth: renalData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.creat.min,
+                yMax: REFS.creat.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (0.51–0.95)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0.4, max: 1.2, grid: { color: gridColor }, title: { display: true, text: 'mg/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
 
-// ── DELETE ─────────────────────────────────────────────────────
-let deleteAction = null;
+    // ═══════════════════════════════════════════════════════════════
+    // BUN Chart
+    // ═══════════════════════════════════════════════════════════════
+    const bunData = withValue(labData, 'bun');
+    new Chart(document.getElementById('bunChart'), {
+      type: 'line',
+      data: {
+        labels: bunData.map(d => d.date),
+        datasets: [{
+          label: 'BUN',
+          data: bunData.map(d => d.bun),
+          borderColor: '#a78bfa',
+          backgroundColor: 'rgba(167, 139, 250, 0.15)',
+          borderWidth: 2.5,
+          pointRadius: 6,
+          pointBackgroundColor: bunData.map(d => d.isNew ? '#10b981' : '#a78bfa'),
+          pointBorderWidth: bunData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.bun.min,
+                yMax: REFS.bun.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (6–20 mg/dL)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 28, grid: { color: gridColor }, title: { display: true, text: 'mg/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
 
-window.confirmDeleteTrabajo = (id, titulo) => {
-  document.getElementById('confirmMsg').innerHTML = `¿Eliminar el trabajo <strong>"${titulo}"</strong>? Esta acción no se puede deshacer.`;
-  deleteAction = async () => {
-    await deleteDoc(doc(db, 'trabajos', id));
-    await loadTrabajos();
-  };
-  document.getElementById('confirmOverlay').classList.add('open');
-};
+    // ═══════════════════════════════════════════════════════════════
+    // HEMATOLOGIC CHARTS
+    // ═══════════════════════════════════════════════════════════════
+    
+    // NLR Chart
+    const nlrData = withValue(labData, 'nlr');
+    new Chart(document.getElementById('nlrChart'), {
+      type: 'line',
+      data: {
+        labels: nlrData.map(d => d.date),
+        datasets: [{
+          label: 'NLR',
+          data: nlrData.map(d => d.nlr),
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: nlrData.map(d => d.isNew ? '#10b981' : '#3b82f6'),
+          pointBorderWidth: nlrData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              favorableRange: {
+                type: 'box',
+                yMin: 0,
+                yMax: 3,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Favorable (<3)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              },
+              threshold: {
+                type: 'line',
+                yMin: 3,
+                yMax: 3,
+                borderColor: 'rgba(239, 68, 68, 0.6)',
+                borderWidth: 2,
+                borderDash: [6, 4],
+                label: {
+                  display: true,
+                  content: 'Umbral = 3',
+                  position: 'start',
+                  font: { size: 9 },
+                  backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                  color: '#fff',
+                  padding: { x: 6, y: 3 }
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 10, grid: { color: gridColor } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Hemoglobin Chart
+    const hgbData = withValue(labData, 'hgb');
+    new Chart(document.getElementById('hemoglobinChart'), {
+      type: 'line',
+      data: {
+        labels: hgbData.map(d => d.date),
+        datasets: [{
+          label: 'Hemoglobina',
+          data: hgbData.map(d => d.hgb),
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: hgbData.map(d => d.isNew ? '#10b981' : '#ef4444'),
+          pointBorderWidth: hgbData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.hgb.min,
+                yMax: REFS.hgb.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (11.2–15.7)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 7, max: 16, grid: { color: gridColor }, title: { display: true, text: 'g/dL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // WBC Chart
+    const wbcData = withValue(labData, 'wbc');
+    new Chart(document.getElementById('wbcChart'), {
+      type: 'line',
+      data: {
+        labels: wbcData.map(d => d.date),
+        datasets: [{
+          label: 'WBC',
+          data: wbcData.map(d => d.wbc),
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139, 92, 246, 0.1)',
+          borderWidth: 2.5,
+          pointRadius: 5,
+          pointBackgroundColor: wbcData.map(d => d.isNew ? '#10b981' : '#8b5cf6'),
+          pointBorderWidth: wbcData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.wbc.min,
+                yMax: REFS.wbc.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (3.98–10.04)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 12, grid: { color: gridColor }, title: { display: true, text: '×10³/µL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+    
+    // Differential Chart
+    const diffData = withAny(labData, ['neut', 'lymph']);
+    new Chart(document.getElementById('diffChart'), {
+      type: 'line',
+      data: {
+        labels: diffData.map(d => d.date),
+        datasets: [
+          {
+            label: 'Neutrófilos',
+            data: diffData.map(d => d.neut),
+            borderColor: '#f97316',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: diffData.map(d => d.isNew ? '#10b981' : '#f97316'),
+            pointBorderWidth: diffData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          },
+          {
+            label: 'Linfocitos',
+            data: diffData.map(d => d.lymph),
+            borderColor: '#3b82f6',
+            borderWidth: 2.5,
+            pointRadius: 5,
+            pointBackgroundColor: diffData.map(d => d.isNew ? '#10b981' : '#3b82f6'),
+            pointBorderWidth: diffData.map(d => d.isNew ? 3 : 0),
+            pointBorderColor: '#10b981',
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              neutRange: {
+                type: 'box',
+                yMin: REFS.neut.min,
+                yMax: REFS.neut.max,
+                backgroundColor: 'rgba(249, 115, 22, 0.08)',
+                borderColor: 'rgba(249, 115, 22, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Neut (1.56–6.13)',
+                  position: { x: 'start', y: 'end' },
+                  font: { size: 9 },
+                  color: '#f97316'
+                }
+              },
+              lymphRange: {
+                type: 'box',
+                yMin: REFS.lymph.min,
+                yMax: REFS.lymph.max,
+                backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                borderColor: 'rgba(59, 130, 246, 0.3)',
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Linf (1.18–3.74)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 9 },
+                  color: '#3b82f6'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 7, grid: { color: gridColor }, title: { display: true, text: '×10³/µL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
 
-window.confirmDeleteYear = (year) => {
-  document.getElementById('confirmMsg').innerHTML = `¿Eliminar <strong>todos los trabajos de ${year}</strong>? Esta acción no se puede deshacer.`;
-  deleteAction = async () => {
-    const toDelete = allTrabajos.filter(t => String(t.anio) === String(year));
-    await Promise.all(toDelete.map(t => deleteDoc(doc(db, 'trabajos', t.id))));
-    await loadTrabajos();
-  };
-  document.getElementById('confirmOverlay').classList.add('open');
-};
+    // PLATELET Chart
+    const plateletData = withValue(labData, 'plt');
+    new Chart(document.getElementById('plateletChart'), {
+      type: 'line',
+      data: {
+        labels: plateletData.map(d => d.date),
+        datasets: [{
+          label: 'Plaquetas',
+          data: plateletData.map(d => d.plt),
+          borderColor: '#a855f7',
+          backgroundColor: 'rgba(168, 85, 247, 0.15)',
+          borderWidth: 2.5,
+          pointRadius: 6,
+          pointBackgroundColor: plateletData.map(d => d.isNew ? '#10b981' : '#a855f7'),
+          pointBorderWidth: plateletData.map(d => d.isNew ? 3 : 0),
+          pointBorderColor: '#10b981',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          annotation: {
+            annotations: {
+              normalRange: {
+                type: 'box',
+                yMin: REFS.plt.min,
+                yMax: REFS.plt.max,
+                backgroundColor: normalBg,
+                borderColor: normalBorder,
+                borderWidth: 1,
+                borderDash: [4, 4],
+                label: {
+                  display: true,
+                  content: 'Normal (182–369)',
+                  position: { x: 'end', y: 'center' },
+                  font: { size: 10, weight: 500 },
+                  color: '#10b981'
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          y: { min: 0, max: 500, grid: { color: gridColor }, title: { display: true, text: '×10³/µL', color: '#64748b', font: { size: 10 } } },
+          x: { grid: { display: false } }
+        }
+      }
+    });
 
-window.closeConfirm = () => { document.getElementById('confirmOverlay').classList.remove('open'); deleteAction = null; };
-window.confirmDeleteAction = async () => {
-  if (deleteAction) await deleteAction();
-  window.closeConfirm();
-};
+    // ═══════════════════════════════════════════════════════════════
+    // DATA TABLE
+    // ═══════════════════════════════════════════════════════════════
+    function getCellClass(value, key) {
+      if (value === null) return 'cell-na';
+      const ref = REFS[key];
+      if (!ref) return '';
+      if (key === 'nlr') return value < 3 ? 'cell-normal' : 'cell-elevated';
+      if (ref.min !== undefined && value < ref.min) return 'cell-low';
+      if (ref.max !== undefined && value > ref.max) {
+        if (['alp', 'ggt', 'ast', 'alt'].includes(key) && value > ref.max * 3) return 'cell-critical';
+        return 'cell-elevated';
+      }
+      return 'cell-normal';
+    }
 
-// ── INIT ──────────────────────────────────────────────────────
-// loadTrabajos se llama desde onAuthStateChanged
-</script>
+    function fmt(v, d = 2) { return v === null ? '—' : (typeof v === 'number' ? v.toFixed(d) : v); }
+
+    const tbody = document.getElementById('tableBody');
+    labData.forEach(row => {
+      const tr = document.createElement('tr');
+      if (row.isNew) tr.classList.add('highlight-row');
+      tr.innerHTML = `
+        <td class="date-col">${row.date}</td>
+        <td class="${getCellClass(row.nlr, 'nlr')}">${fmt(row.nlr)}</td>
+        <td class="${getCellClass(row.hgb, 'hgb')}">${fmt(row.hgb, 1)}</td>
+        <td class="${getCellClass(row.wbc, 'wbc')}">${fmt(row.wbc)}</td>
+        <td class="${getCellClass(row.neut, 'neut')}">${fmt(row.neut)}</td>
+        <td class="${getCellClass(row.lymph, 'lymph')}">${fmt(row.lymph)}</td>
+        <td class="${getCellClass(row.plt, 'plt')}">${row.plt ?? '—'}</td>
+        <td class="${getCellClass(row.ast, 'ast')}">${fmt(row.ast, 1)}</td>
+        <td class="${getCellClass(row.alt, 'alt')}">${fmt(row.alt, 1)}</td>
+        <td class="${getCellClass(row.alp, 'alp')}">${fmt(row.alp, 1)}</td>
+        <td class="${getCellClass(row.ggt, 'ggt')}">${row.ggt ?? '—'}</td>
+        <td class="${getCellClass(row.biliT, 'biliT')}">${fmt(row.biliT)}</td>
+        <td class="${getCellClass(row.biliD, 'biliD')}">${fmt(row.biliD)}</td>
+        <td class="${getCellClass(row.creat, 'creat')}">${fmt(row.creat)}</td>
+        <td class="${getCellClass(row.bun, 'bun')}">${fmt(row.bun, 1)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  </script>
 </body>
 </html>
